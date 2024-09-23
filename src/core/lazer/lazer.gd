@@ -26,8 +26,12 @@ func update(mouse_position: Vector2) -> void:
 
 	while energy > 0.0:
 		ray.force_raycast_update()
+		if not ray.is_colliding():
+			draw_points.append(local_target_position)
+			break
+
 		var collider := ray.get_collider()
-		if not collider:
+		if collider is LevelBoundaries:
 			draw_points.append(local_target_position)
 			break
 
