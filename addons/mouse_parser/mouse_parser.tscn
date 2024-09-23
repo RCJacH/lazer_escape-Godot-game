@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://cgts86wxu5wi7"]
+
+[ext_resource type="Script" path="res://addons/mouse_parser/mouse_parser.gd" id="1_l6bww"]
+
+[node name="MouseParser" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("1_l6bww")
+metadata/_edit_use_anchors_ = true
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
