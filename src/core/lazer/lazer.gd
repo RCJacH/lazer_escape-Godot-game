@@ -1,19 +1,33 @@
 extends Node2D
 class_name Lazer
 
+signal angle_changed(new_angle: float)
+
 @export var reduction_rate := 0.01
 
+var angle: float = 0.0
 var draw_points: Array[Vector2] = [Vector2.ZERO]
 
 @onready var ray: RayCast2D = $RayCast2D
 @onready var display: Line2D = $Line2D
 
 
-func update(mouse_position: Vector2) -> void:
+func from_position(mouse_position: Vector2) -> void:
+	angle = global_position.angle_to_point(mouse_position)
+	angle_changed.emit(angle)
+	update()
+
+
+func adjust_angle(d_angle: float) -> void:
+	angle += d_angle
+	angle_changed.emit(angle)
+	update()
+
+
+func update() -> void:
 	draw_points.resize(1)
 	var length := get_viewport_rect().size.length()
 
-	var angle := global_position.angle_to_point(mouse_position)
 	var local_target_position := Vector2.from_angle(angle) * length
 	var collision_point: Vector2
 	var collision_normal: Vector2
