@@ -24,8 +24,10 @@ metadata/_edit_lock_ = true
 [node name="Lazer" parent="LazerHost" instance=ExtResource("2_jtln5")]
 position = Vector2(561, 279)
 
-[node name="ControlParser" type="Control" parent="."]
-layout_mode = 1
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ControlParser" type="Control" parent="CanvasLayer"]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -82,6 +84,7 @@ metadata/_edit_lock_ = true
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 
-[connection signal="mouse_moved" from="ControlParser" to="LazerHost" method="_on_control_parser_mouse_moved"]
-[connection signal="wheel_down_pressed" from="ControlParser" to="LazerHost" method="_on_control_parser_wheel_down_pressed"]
-[connection signal="wheel_up_pressed" from="ControlParser" to="LazerHost" method="_on_control_parser_wheel_up_pressed"]
+[connection signal="gui_input" from="CanvasLayer/ControlParser" to="CanvasLayer/ControlParser" method="_on_gui_input"]
+[connection signal="mouse_moved" from="CanvasLayer/ControlParser" to="LazerHost" method="_on_control_parser_mouse_moved"]
+[connection signal="wheel_down_pressed" from="CanvasLayer/ControlParser" to="LazerHost" method="_on_control_parser_wheel_down_pressed"]
+[connection signal="wheel_up_pressed" from="CanvasLayer/ControlParser" to="LazerHost" method="_on_control_parser_wheel_up_pressed"]
