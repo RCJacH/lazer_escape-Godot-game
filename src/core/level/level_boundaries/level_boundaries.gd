@@ -16,7 +16,7 @@ class_name LevelBoundaries
 
 
 func _ready() -> void:
-	update_boundaries()
+	update_boundaries.call_deferred()
 
 
 func update_boundaries(rect: Rect2 = Rect2()) -> void:
