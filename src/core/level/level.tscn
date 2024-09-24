@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://brjygsbomddjk"]
+[gd_scene load_steps=7 format=3 uid="uid://brjygsbomddjk"]
 
 [ext_resource type="Script" path="res://src/core/level/level.gd" id="1_ybe1b"]
 [ext_resource type="PackedScene" uid="uid://cd00ciib5wud0" path="res://src/core/level/level_boundaries/level_boundaries.tscn" id="2_bot5h"]
 [ext_resource type="Script" path="res://src/core/level/control_parser.gd" id="2_dnff1"]
 [ext_resource type="PackedScene" uid="uid://cwggn3r25h120" path="res://src/core/lazer/lazer.tscn" id="2_jtln5"]
 [ext_resource type="Script" path="res://src/core/level/lazer_host.gd" id="2_u8vuf"]
+[ext_resource type="Script" path="res://src/core/level/level_ui/info/angle_label.gd" id="5_d81yi"]
 
 [node name="Level" type="Control"]
 layout_mode = 3
@@ -75,6 +76,7 @@ metadata/_edit_lock_ = true
 [node name="AngleLabel" type="Label" parent="Viewport/LevelBlock/MarginContainer/VBoxContainer"]
 layout_mode = 2
 vertical_alignment = 1
+script = ExtResource("5_d81yi")
 metadata/_edit_lock_ = true
 
 [node name="LevelBoundaries" parent="Viewport/LevelBlock" instance=ExtResource("2_bot5h")]
@@ -85,6 +87,7 @@ custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 
 [connection signal="all_target_hit" from="LazerHost" to="." method="_on_lazer_host_all_target_hit"]
+[connection signal="angle_changed" from="LazerHost/Lazer" to="Viewport/LevelBlock/MarginContainer/VBoxContainer/AngleLabel" method="_on_lazer_angle_changed"]
 [connection signal="gui_input" from="CanvasLayer/ControlParser" to="CanvasLayer/ControlParser" method="_on_gui_input"]
 [connection signal="mouse_moved" from="CanvasLayer/ControlParser" to="LazerHost" method="_on_control_parser_mouse_moved"]
 [connection signal="wheel_down_pressed" from="CanvasLayer/ControlParser" to="LazerHost" method="_on_control_parser_wheel_down_pressed"]
