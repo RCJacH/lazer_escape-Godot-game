@@ -12,6 +12,8 @@ class_name LevelBoundaries
 	set(new_value):
 		update_boundaries()
 
+@export var rect_ref: Control
+
 
 func _ready() -> void:
 	update_boundaries()
@@ -19,7 +21,11 @@ func _ready() -> void:
 
 func update_boundaries(rect: Rect2 = Rect2()) -> void:
 	if not rect:
-		rect = get_viewport_rect()
+		if not rect_ref:
+			rect = get_viewport_rect()
+		else:
+			rect = Rect2(rect_ref.position, rect_ref.size)
+
 	var points: Array[Vector2] = _get_corners(rect.grow(-shrink_inner))
 	var outer_corner := _get_corners(rect.grow(grow_outer))
 	outer_corner.reverse()
