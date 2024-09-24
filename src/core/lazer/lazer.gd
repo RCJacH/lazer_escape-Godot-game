@@ -71,5 +71,5 @@ func update() -> void:
 		boundary_hit.emit()
 	else:
 		boundary_missed.emit()
-	display.points.clear()
-	display.points = _draw_points
+
+	display.points = PackedVector2Array(_draw_points)
