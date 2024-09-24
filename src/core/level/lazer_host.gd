@@ -2,8 +2,9 @@ extends Node2D
 class_name LazerHost
 
 
-func _on_control_parser_mouse_moved(position: Vector2, shift: bool, dragging: bool, press_position: Vector2) -> void:
-	pass
+func _on_control_parser_mouse_moved(mouse_position: Vector2, relative: Vector2) -> void:
+	for child: Lazer in get_children():
+		child.from_position(mouse_position)
 
 
 func _on_control_parser_wheel_down_pressed(ctrl, alt, shift):
