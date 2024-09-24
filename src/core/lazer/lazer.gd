@@ -10,15 +10,14 @@ var draw_points: Array[Vector2] = [Vector2.ZERO]
 
 
 func update(mouse_position: Vector2) -> void:
-	draw_points.clear()
 	draw_points.resize(1)
 	var length := get_viewport_rect().size.length()
 
 	var angle := global_position.angle_to_point(mouse_position)
 	var local_target_position := Vector2.from_angle(angle) * length
 	var collision_point: Vector2
-	var normal: Vector2
-	var bounce: Vector2
+	var collision_normal: Vector2
+	var ray_direction: Vector2
 	var energy := 1.0
 
 	ray.global_position = global_position
@@ -27,21 +26,26 @@ func update(mouse_position: Vector2) -> void:
 	while energy > 0.0:
 		ray.force_raycast_update()
 		if not ray.is_colliding():
-			draw_points.append(local_target_position)
 			break
 
 		var collider := ray.get_collider()
-		if collider is LevelBoundaries:
-			draw_points.append(local_target_position)
-			break
 
 		collision_point = ray.get_collision_point()
+		if collision_point == ray.global_position:
+			ray.add_exception_rid(ray.get_collider_rid())
+			continue
+
+		ray.clear_exceptions()
 		draw_points.append(collision_point - global_position)
-		normal = ray.get_collision_normal()
-		bounce = ray.global_position.direction_to(ray.target_position).bounce(normal)
-		local_target_position = collision_point + bounce * length
+		if collider is LevelBoundaries:
+			break
+
+		collision_normal = ray.get_collision_normal()
+		ray_direction = ray.global_position.direction_to(collision_point)
+		ray_direction = ray_direction.bounce(collision_normal)
 		ray.global_position = collision_point
-		ray.target_position = bounce * length + global_position
+		ray.target_position = ray_direction * length
+		local_target_position = collision_point + ray.target_position - global_position
 		energy -= reduction_rate
 
 	display.points.clear()
