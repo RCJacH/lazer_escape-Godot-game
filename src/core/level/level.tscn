@@ -1,0 +1,81 @@
+[gd_scene load_steps=5 format=3 uid="uid://brjygsbomddjk"]
+
+[ext_resource type="Script" path="res://src/core/level/level.gd" id="1_ybe1b"]
+[ext_resource type="PackedScene" uid="uid://cd00ciib5wud0" path="res://src/core/level/level_boundaries/level_boundaries.tscn" id="2_bot5h"]
+[ext_resource type="Script" path="res://src/core/level/control_parser.gd" id="2_dnff1"]
+[ext_resource type="PackedScene" uid="uid://cwggn3r25h120" path="res://src/core/lazer/lazer.tscn" id="2_jtln5"]
+
+[node name="Level" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ybe1b")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="LazerHost" type="Node2D" parent="."]
+metadata/_edit_lock_ = true
+
+[node name="Lazer" parent="LazerHost" instance=ExtResource("2_jtln5")]
+position = Vector2(561, 279)
+
+[node name="ControlParser" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_dnff1")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="Viewport" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_lock_ = true
+
+[node name="LevelBlock" type="Control" parent="Viewport"]
+layout_mode = 2
+size_flags_vertical = 3
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Viewport/LevelBlock"]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_right = 128.0
+grow_vertical = 0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 16
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Viewport/LevelBlock/MarginContainer"]
+layout_mode = 2
+metadata/_edit_lock_ = true
+
+[node name="AngleLabel" type="Label" parent="Viewport/LevelBlock/MarginContainer/VBoxContainer"]
+layout_mode = 2
+vertical_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="LevelBoundaries" parent="Viewport/LevelBlock" instance=ExtResource("2_bot5h")]
+metadata/_edit_lock_ = true
+
+[node name="ControlPanel" type="Panel" parent="Viewport"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
