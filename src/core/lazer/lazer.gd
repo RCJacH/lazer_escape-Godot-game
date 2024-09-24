@@ -2,11 +2,14 @@ extends Node2D
 class_name Lazer
 
 signal angle_changed(new_angle: float)
+signal boundary_hit()
+signal boundary_missed()
 
 @export var reduction_rate := 0.01
 
 var angle: float = 0.0
-var draw_points: Array[Vector2] = [Vector2.ZERO]
+
+var _draw_points: Array[Vector2] = [Vector2.ZERO]
 
 @onready var ray: RayCast2D = $RayCast2D
 @onready var display: Line2D = $Line2D
@@ -25,7 +28,8 @@ func adjust_angle(d_angle: float) -> void:
 
 
 func update() -> void:
-	draw_points.resize(1)
+	_draw_points.resize(1)
+	var _hit_boundary := false
 	var length := get_viewport_rect().size.length()
 
 	var local_target_position := Vector2.from_angle(angle) * length
@@ -50,8 +54,9 @@ func update() -> void:
 			continue
 
 		ray.clear_exceptions()
-		draw_points.append(collision_point - global_position)
+		_draw_points.append(collision_point - global_position)
 		if collider is LevelBoundaries:
+			_hit_boundary = true
 			break
 
 		collision_normal = ray.get_collision_normal()
@@ -62,5 +67,9 @@ func update() -> void:
 		local_target_position = collision_point + ray.target_position - global_position
 		energy -= reduction_rate
 
+	if _hit_boundary:
+		boundary_hit.emit()
+	else:
+		boundary_missed.emit()
 	display.points.clear()
-	display.points = draw_points
+	display.points = _draw_points
