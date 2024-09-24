@@ -10,13 +10,13 @@ config_version=5
 
 [application]
 
-config/name="lazer_aiming"
+config/name="lazer_escape_game"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [dotnet]
 
-project/assembly_name="lazer_aiming"
+project/assembly_name="lazer_escape_game"
 
 [rendering]
 
