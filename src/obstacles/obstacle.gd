@@ -68,13 +68,14 @@ func refresh() -> void:
 
 
 func _update_data() -> void:
-	if do_not_connect or polygons.size() > 1:
+	if polygons.size() > 1:
 		return _update_multiple_polygons()
 
 	_update_single_polygon()
 
 
 func _update_multiple_polygons() -> void:
+	$Display.polygons = []
 	$Display.polygons.resize(polygons.size())
 	var points: Array[Vector2] = []
 	var index_array: Array[int] = []
@@ -84,16 +85,17 @@ func _update_multiple_polygons() -> void:
 		var count := points.size()
 		points.append_array(polygon.points)
 		collision.polygon = PackedVector2Array(polygon.points)
-		for n in range(polygon.size()):
-			index_array.append(n + count)
+		for n in range(count, count + polygon.size()):
+			index_array.append(n)
 		$Display.polygons[i] = PackedInt32Array(index_array)
-		index_array.clear()
+		index_array = []
 	$Display.polygon = PackedVector2Array(points)
 
 
 func _update_single_polygon() -> void:
 	var packed_array := PackedVector2Array(polygons[0].points)
 	$Display.polygon = packed_array
+	$Display.polygons.clear()
 	collisions[0].polygon = packed_array
 
 

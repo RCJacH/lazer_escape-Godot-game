@@ -66,7 +66,7 @@ func refresh() -> void:
 		outer_points.append(outer)
 	if i < polygons.size():
 		polygons[i].points = _build_polygon_shape(inner_points, outer_points)
-	_update_data.call_deferred()
+	_update_data()
 	_pending_refresh = false
 
 
@@ -78,6 +78,7 @@ func _build_polygon_shape(
 	points.append_array(inner_points)
 	outer_points.reverse()
 	points.append_array(outer_points)
+	# points.append(points[0])
 	inner_points.clear()
 	outer_points.clear()
 	return points
