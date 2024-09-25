@@ -150,22 +150,3 @@ func _build_polygon_shape(
 	inner_points.clear()
 	outer_points.clear()
 	return points
-
-
-class Polygon:
-	var points: Array[Vector2]
-
-	func clear() -> void:
-		points.clear()
-
-
-	func append(v: Vector2) -> void:
-		points.append(v)
-
-
-	func append_array(v: Array[Vector2]) -> void:
-		points.append_array(v)
-
-
-	func size() -> int:
-		return points.size()
