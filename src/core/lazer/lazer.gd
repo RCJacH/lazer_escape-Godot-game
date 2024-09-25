@@ -5,7 +5,7 @@ signal angle_changed(new_angle: float)
 signal boundary_hit()
 signal boundary_missed()
 
-@export var reduction_rate := 0.01
+@export var bounces := 1
 
 var angle: float = 0.0
 
@@ -36,12 +36,12 @@ func update() -> void:
 	var collision_point: Vector2
 	var collision_normal: Vector2
 	var ray_direction: Vector2
-	var energy := 1.0
+	var i := 0
 
 	ray.global_position = global_position
 	ray.target_position = local_target_position
 
-	while energy > 0.0:
+	while i < bounces:
 		ray.force_raycast_update()
 		if not ray.is_colliding():
 			break
@@ -65,7 +65,7 @@ func update() -> void:
 		ray.global_position = collision_point
 		ray.target_position = ray_direction * length
 		local_target_position = collision_point + ray.target_position - global_position
-		energy -= reduction_rate
+		i += 1
 
 	if _hit_boundary:
 		boundary_hit.emit()
