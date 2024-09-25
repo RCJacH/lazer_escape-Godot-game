@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://bnqcijapmmg00"]
+
+[ext_resource type="PackedScene" uid="uid://wjbnu7hhohv8" path="res://src/obstacles/bounceable/bounceable_obstacle.tscn" id="1_aeb8y"]
+[ext_resource type="Script" path="res://src/obstacles/bounceable/rock/rock.gd" id="2_54nds"]
+
+[node name="Rock" instance=ExtResource("1_aeb8y")]
+script = ExtResource("2_54nds")
+radius = 64.0
+initialize = false
+
+[node name="Display" parent="." index="0"]
+polygon = PackedVector2Array(66.5526, 0.224881, 64.4951, 11.895, 60.1737, 22.2444, 57.2628, 33.1547, 49.336, 41.6458, 42.9288, 51.3042, 32.8969, 58.0825, 22.188, 62.5955, 10.7774, 63.3382, -0.480135, 64.7894, -11.8314, 65.6962, -22.8415, 61.7021, -33.0669, 57.0057, -42.2778, 49.724, -51.0383, 42.7614, -56.5889, 32.3894, -60.3227, 21.7326, -65.0811, 11.1177, -65.9287, -0.221451, -65.0643, -11.5162, -62.867, -23.4137, -56.3235, -32.8597, -50.1976, -42.6948, -41.7782, -49.9567, -31.7304, -55.9478, -22.4288, -62.2246, -11.4754, -65.4399, 0.287167, -66.0554, 11.4134, -63.0052, 22.1386, -60.3464, 32.7098, -55.88, 42.0167, -49.9824, 50.0075, -41.664, 58.2354, -33.3805, 61.0048, -22.0046, 65.0003, -11.1524)
