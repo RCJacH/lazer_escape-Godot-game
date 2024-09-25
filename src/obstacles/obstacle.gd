@@ -48,6 +48,14 @@ var collisions: Array[CollisionPolygon2D] = []
 var randomizer := RandomNumberGenerator.new()
 
 var _pending_refresh: bool = false
+var _polygon_count: int = 0 :
+	set(new_polygon_count):
+		_polygon_count = new_polygon_count
+		_update_polygons(_polygon_count)
+var _collision_count: int = 0 :
+	set(new_collision_count):
+		_collision_count = new_collision_count
+		_update_collisions(_collision_count)
 
 
 func _ready() -> void:
@@ -89,14 +97,26 @@ func _update_single_polygon() -> void:
 	collisions[0].polygon = packed_array
 
 
-func _build_polygon_shape(
-	inner_points: Array[Vector2],
-	outer_points: Array[Vector2],
-) -> Array[Vector2]:
-	var points: Array[Vector2] = []
-	points.append_array(inner_points)
-	outer_points.reverse()
-	points.append_array(outer_points)
-	inner_points.clear()
-	outer_points.clear()
-	return points
+func _update_polygons(new_count: int) -> void:
+	var cur_count := polygons.size()
+	var diff := new_count - cur_count
+	if diff >= 0:
+		for i in range(diff):
+			polygons.append(Polygon.new())
+	elif diff <= 0:
+		polygons.resize(new_count)
+
+
+func _update_collisions(new_count: int) -> void:
+	var cur_count := collisions.size()
+	var diff := new_count - cur_count
+	if diff > 0:
+		for i in range(diff):
+			var collision := CollisionPolygon2D.new()
+			collisions.append(collision)
+			add_child(collision)
+	elif diff < 0:
+		for i in range(-diff):
+			var collision := collisions[-1 - i]
+			collision.queue_free()
+		collisions.resize(new_count)
