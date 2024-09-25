@@ -2,8 +2,6 @@
 extends BounceableObstacle
 class_name BounceableObstacleCave
 
-const DEGREE_STEP: int = 10
-
 
 @export var radius: float = 128.0 :
 	set(new_radius):
@@ -18,8 +16,8 @@ const DEGREE_STEP: int = 10
 @export_range(0.0, 1.0) var openings: Array[float] = [0.5] :
 	set(new_openings):
 		openings = new_openings
-		change_polygon_counts()
-		change_collision_counts()
+		_polygon_count = openings.size()
+		_collision_count = openings.size()
 		_pending_refresh = true
 		refresh.call_deferred()
 @export_range(0.01, 0.5) var opening_width: float = 0.05 :
@@ -44,8 +42,8 @@ func refresh() -> void:
 	var starting_deg: int = ceili(opening_pcts[0] * 360) if opening_pcts else 0
 	var ending_deg := starting_deg + 360
 
-	for deg in range(starting_deg, ending_deg, DEGREE_STEP):
-		var direction := Vector2.from_angle(deg_to_rad(deg + DEGREE_STEP * jagged_range * randomizer.randf()))
+	for deg in range(starting_deg, ending_deg, density):
+		var direction := Vector2.from_angle(deg_to_rad(deg + density * jagged_range * randomizer.randf()))
 		var inner := direction * (radius + thickness * jagged_range * randomizer.randf())
 		var outer := direction * (radius + thickness + thickness * jagged_range * randomizer.randf())
 		var pct: float = deg / 360.0
@@ -72,28 +70,14 @@ func refresh() -> void:
 	_pending_refresh = false
 
 
-func change_polygon_counts() -> void:
-	var cur_count := polygons.size()
-	var new_count := openings.size()
-	var diff := new_count - cur_count
-	if diff >= 0:
-		for i in range(diff):
-			polygons.append(Polygon.new())
-	elif diff <= 0:
-		polygons.resize(new_count)
-
-
-func change_collision_counts() -> void:
-	var cur_count := collisions.size()
-	var new_count := openings.size()
-	var diff := new_count - cur_count
-	if diff > 0:
-		for i in range(diff):
-			var collision := CollisionPolygon2D.new()
-			collisions.append(collision)
-			add_child(collision)
-	elif diff < 0:
-		for i in range(-diff):
-			var collision := collisions[-1 - i]
-			collision.queue_free()
-		collisions.resize(new_count)
+func _build_polygon_shape(
+	inner_points: Array[Vector2],
+	outer_points: Array[Vector2],
+) -> Array[Vector2]:
+	var points: Array[Vector2] = []
+	points.append_array(inner_points)
+	outer_points.reverse()
+	points.append_array(outer_points)
+	inner_points.clear()
+	outer_points.clear()
+	return points
