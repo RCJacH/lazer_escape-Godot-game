@@ -6,8 +6,5 @@
 position = Vector2(600, 300)
 script = ExtResource("1_s1xr7")
 thickness = 32.0
-openings = Array[float]([0.961])
-opening_width = 0.267
-jaggedness = 1.0
 
 [node name="Display" type="Polygon2D" parent="."]

@@ -18,7 +18,7 @@ const DEGREE_STEP: int = 10
 	set(new_openings):
 		openings = new_openings
 		change_polygon_counts()
-		# change_collision_counts()
+		change_collision_counts()
 		_pending_refresh = true
 		refresh.call_deferred()
 @export_range(0.0, 0.5) var opening_width: float = 0.05 :
@@ -33,8 +33,14 @@ const DEGREE_STEP: int = 10
 		refresh.call_deferred()
 
 var polygons: Array[Polygon] = []
+var collisions: Array[CollisionPolygon2D] = []
 
 var _pending_refresh: bool = false
+
+
+func _ready() -> void:
+	_pending_refresh = true
+	refresh.call_deferred()
 
 
 func refresh() -> void:
@@ -76,16 +82,17 @@ func refresh() -> void:
 		outer_points.append(outer)
 	if i < polygons.size():
 		polygons[i].points = _build_polygon_shape(inner_points, outer_points)
-	queue_redraw()
+	# queue_redraw()
+	_update_data()
 	_pending_refresh = false
 
 
-func _draw():
-	for polygon in polygons:
-		if polygon.points.size() >= 2:
-			draw_polyline(polygon.points, Color.WHITE)
-		for point in polygon.points:
-			draw_circle(point, 2, Color.WHITE)
+# func _draw():
+# 	for polygon in polygons:
+# 		if polygon.points.size() >= 2:
+# 			draw_polyline(polygon.points, Color.WHITE)
+# 		for point in polygon.points:
+# 			draw_circle(point, 2, Color.WHITE)
 
 
 func change_polygon_counts() -> void:
@@ -103,20 +110,33 @@ func change_collision_counts() -> void:
 	var cur_count := get_child_count() - 1
 	var new_count := openings.size()
 	var diff := new_count - cur_count
-	if diff >= 0:
+	if diff > 0:
 		for i in range(diff):
-			add_child(CollisionPolygon2D.new())
-	elif diff <= 0:
+			var collision := CollisionPolygon2D.new()
+			collisions.append(collision)
+			add_child(collision)
+	elif diff < 0:
 		for i in range(-diff):
-			remove_child(get_child(-1))
+			var collision := collisions[-1 - i]
+			collision.queue_free()
+		collisions.resize(new_count)
 
 
 func _update_data() -> void:
-	for polygon in polygons:
-		var collision := CollisionPolygon2D.new()
-		add_child(collision)
+	$Display.polygons.resize(polygons.size())
+	var points: Array[Vector2] = []
+	var index_array: Array[int] = []
+	for i in range(polygons.size()):
+		var polygon := polygons[i]
+		var collision := collisions[i]
+		var count := points.size()
+		points.append_array(polygon.points)
 		collision.polygon = PackedVector2Array(polygon.points)
-	$Display.polygons = polygons
+		for n in range(polygon.size()):
+			index_array.append(n + count)
+		$Display.polygons[i] = PackedInt32Array(index_array)
+		index_array.clear()
+	$Display.polygon = points
 
 
 func _build_polygon_shape(
@@ -146,3 +166,7 @@ class Polygon:
 
 	func append_array(v: Array[Vector2]) -> void:
 		points.append_array(v)
+
+
+	func size() -> int:
+		return points.size()
