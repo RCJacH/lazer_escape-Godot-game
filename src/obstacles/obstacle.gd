@@ -2,7 +2,11 @@
 extends StaticBody2D
 class_name Obstacle
 
-
+@export var density := Density.HIGH :
+	set(new_density):
+		density = new_density
+		_pending_refresh = true
+		refresh.call_deferred()
 @export_range(0.0, 1.0) var jaggedness: float = 0.1 :
 	set(new_jaggedness):
 		jaggedness = new_jaggedness
@@ -23,6 +27,21 @@ class_name Obstacle
 @export var randomize_seed: bool = false :
 	set(new_value):
 		random_seed = randi()
+
+enum Density {
+	TRIANGLE = 180,
+	SQUARE = 90,
+	PENTAGON = 72,
+	HEXAGON = 60,
+	OCTAGON = 45,
+	NONAGON = 40,
+	DECAGON = 36,
+	DODECAGON = 30,
+	LOW = 24,
+	MID = 18,
+	HIGH = 10,
+	SUPERHIGH = 5,
+}
 
 var polygons: Array[Polygon] = []
 var collisions: Array[CollisionPolygon2D] = []

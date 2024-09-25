@@ -44,8 +44,8 @@ func refresh() -> void:
 	var starting_deg: int = ceili(opening_pcts[0] * 360) if opening_pcts else 0
 	var ending_deg := starting_deg + 360
 
-	for deg in range(starting_deg, ending_deg, DEGREE_STEP):
-		var direction := Vector2.from_angle(deg_to_rad(deg + DEGREE_STEP * jagged_range * randomizer.randf()))
+	for deg in range(starting_deg, ending_deg, density):
+		var direction := Vector2.from_angle(deg_to_rad(deg + density * jagged_range * randomizer.randf()))
 		var inner := direction * (radius + thickness * jagged_range * randomizer.randf())
 		var outer := direction * (radius + thickness + thickness * jagged_range * randomizer.randf())
 		var pct: float = deg / 360.0
