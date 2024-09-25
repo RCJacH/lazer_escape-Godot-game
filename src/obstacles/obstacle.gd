@@ -1,3 +1,4 @@
+@tool
 extends StaticBody2D
 class_name Obstacle
 
@@ -7,6 +8,11 @@ class_name Obstacle
 		jaggedness = new_jaggedness
 		_pending_refresh = true
 		refresh.call_deferred()
+@export var do_not_connect: bool = false :
+	set(new_value):
+		do_not_connect = new_value
+		_pending_refresh = true
+		refresh.call_deferred()
 @export var random_seed: int = 1 :
 	set(new_seed):
 		random_seed = new_seed
@@ -14,6 +20,9 @@ class_name Obstacle
 		randomizer.randomize()
 		_pending_refresh = true
 		refresh.call_deferred()
+@export var randomize_seed: bool = false :
+	set(new_value):
+		random_seed = randi()
 
 var polygons: Array[Polygon] = []
 var collisions: Array[CollisionPolygon2D] = []
@@ -32,7 +41,7 @@ func refresh() -> void:
 
 
 func _update_data() -> void:
-	if polygons.size() > 1:
+	if do_not_connect or polygons.size() > 1:
 		return _update_multiple_polygons()
 
 	_update_single_polygon()

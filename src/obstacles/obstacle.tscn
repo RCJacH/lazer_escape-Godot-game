@@ -6,3 +6,4 @@
 script = ExtResource("1_pm6rj")
 
 [node name="Display" type="Polygon2D" parent="."]
+metadata/_edit_lock_ = true
