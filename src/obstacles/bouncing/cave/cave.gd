@@ -31,9 +31,17 @@ const DEGREE_STEP: int = 10
 		jaggedness = new_jaggedness
 		_pending_refresh = true
 		refresh.call_deferred()
+@export var random_seed: int = 1 :
+	set(new_seed):
+		random_seed = new_seed
+		randomizer.seed = new_seed
+		randomizer.randomize()
+		_pending_refresh = true
+		refresh.call_deferred()
 
 var polygons: Array[Polygon] = []
 var collisions: Array[CollisionPolygon2D] = []
+var randomizer := RandomNumberGenerator.new()
 
 var _pending_refresh: bool = false
 
@@ -59,9 +67,9 @@ func refresh() -> void:
 	var ending_deg := starting_deg + 360
 
 	for deg in range(starting_deg, ending_deg, DEGREE_STEP):
-		var direction := Vector2.from_angle(deg_to_rad(deg + DEGREE_STEP * jagged_range * randf()))
-		var inner := direction * (radius - thickness * jagged_range * randf())
-		var outer := direction * (radius + thickness + thickness * jagged_range * randf())
+		var direction := Vector2.from_angle(deg_to_rad(deg + DEGREE_STEP * jagged_range * randomizer.randf()))
+		var inner := direction * (radius + thickness * jagged_range * randomizer.randf())
+		var outer := direction * (radius + thickness + thickness * jagged_range * randomizer.randf())
 		var pct: float = deg / 360.0
 		if opening_pcts:
 			if is_opening:
@@ -72,7 +80,7 @@ func refresh() -> void:
 					continue
 			elif pct >= opening_pcts.front():
 				is_opening = true
-				opening_close_pct = pct + opening_width - opening_width * jagged_range * randf()
+				opening_close_pct = pct + opening_width - opening_width * jagged_range * randomizer.randf()
 				if inner_points and outer_points:
 					polygons[i].points = _build_polygon_shape(inner_points, outer_points)
 					i += 1
@@ -82,17 +90,8 @@ func refresh() -> void:
 		outer_points.append(outer)
 	if i < polygons.size():
 		polygons[i].points = _build_polygon_shape(inner_points, outer_points)
-	# queue_redraw()
-	_update_data()
+	_update_data.call_deferred()
 	_pending_refresh = false
-
-
-# func _draw():
-# 	for polygon in polygons:
-# 		if polygon.points.size() >= 2:
-# 			draw_polyline(polygon.points, Color.WHITE)
-# 		for point in polygon.points:
-# 			draw_circle(point, 2, Color.WHITE)
 
 
 func change_polygon_counts() -> void:
