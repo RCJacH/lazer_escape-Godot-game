@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://wjbnu7hhohv8"]
+
+[ext_resource type="PackedScene" uid="uid://dfw685rvfctgh" path="res://src/obstacles/obstacle.tscn" id="1_d7hx8"]
+[ext_resource type="Script" path="res://src/obstacles/bounceable/bounceable_obstacle.gd" id="2_f1hou"]
+
+[node name="BounceableObstacle" instance=ExtResource("1_d7hx8")]
+script = ExtResource("2_f1hou")

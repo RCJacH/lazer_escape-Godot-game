@@ -1,8 +1,9 @@
 @tool
-extends StaticBody2D
-class_name ObstacleCave
+extends BounceableObstacle
+class_name BounceableObstacleCave
 
 const DEGREE_STEP: int = 10
+
 
 @export var radius: float = 128.0 :
 	set(new_radius):
@@ -21,34 +22,11 @@ const DEGREE_STEP: int = 10
 		change_collision_counts()
 		_pending_refresh = true
 		refresh.call_deferred()
-@export_range(0.0, 0.5) var opening_width: float = 0.05 :
+@export_range(0.01, 0.5) var opening_width: float = 0.05 :
 	set(new_opening_width):
 		opening_width = new_opening_width
 		_pending_refresh = true
 		refresh.call_deferred()
-@export_range(0.0, 1.0) var jaggedness: float = 0.1 :
-	set(new_jaggedness):
-		jaggedness = new_jaggedness
-		_pending_refresh = true
-		refresh.call_deferred()
-@export var random_seed: int = 1 :
-	set(new_seed):
-		random_seed = new_seed
-		randomizer.seed = new_seed
-		randomizer.randomize()
-		_pending_refresh = true
-		refresh.call_deferred()
-
-var polygons: Array[Polygon] = []
-var collisions: Array[CollisionPolygon2D] = []
-var randomizer := RandomNumberGenerator.new()
-
-var _pending_refresh: bool = false
-
-
-func _ready() -> void:
-	_pending_refresh = true
-	refresh.call_deferred()
 
 
 func refresh() -> void:
@@ -106,7 +84,7 @@ func change_polygon_counts() -> void:
 
 
 func change_collision_counts() -> void:
-	var cur_count := get_child_count() - 1
+	var cur_count := collisions.size()
 	var new_count := openings.size()
 	var diff := new_count - cur_count
 	if diff > 0:
@@ -119,53 +97,3 @@ func change_collision_counts() -> void:
 			var collision := collisions[-1 - i]
 			collision.queue_free()
 		collisions.resize(new_count)
-
-
-func _update_data() -> void:
-	$Display.polygons.resize(polygons.size())
-	var points: Array[Vector2] = []
-	var index_array: Array[int] = []
-	for i in range(polygons.size()):
-		var polygon := polygons[i]
-		var collision := collisions[i]
-		var count := points.size()
-		points.append_array(polygon.points)
-		collision.polygon = PackedVector2Array(polygon.points)
-		for n in range(polygon.size()):
-			index_array.append(n + count)
-		$Display.polygons[i] = PackedInt32Array(index_array)
-		index_array.clear()
-	$Display.polygon = points
-
-
-func _build_polygon_shape(
-	inner_points: Array[Vector2],
-	outer_points: Array[Vector2],
-) -> Array[Vector2]:
-	var points: Array[Vector2] = []
-	points.append_array(inner_points)
-	outer_points.reverse()
-	points.append_array(outer_points)
-	points.append(inner_points.front())
-	inner_points.clear()
-	outer_points.clear()
-	return points
-
-
-class Polygon:
-	var points: Array[Vector2]
-
-	func clear() -> void:
-		points.clear()
-
-
-	func append(v: Vector2) -> void:
-		points.append(v)
-
-
-	func append_array(v: Array[Vector2]) -> void:
-		points.append_array(v)
-
-
-	func size() -> int:
-		return points.size()
