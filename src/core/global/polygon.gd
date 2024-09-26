@@ -2,7 +2,7 @@
 extends RefCounted
 class_name Polygon
 
-var points: Array[Vector2]
+var points: PackedVector2Array
 var collision: CollisionPolygon2D :
 	get():
 		if not _collision:

@@ -15,6 +15,9 @@ class_name Obstacle
 	set(new_value):
 		do_not_connect = new_value
 		_refresh_deferred()
+@export var freeze: bool = true:
+	set(new_freeze):
+		freeze = new_freeze
 @export var random_seed: int = 1 :
 	set(new_seed):
 		random_seed = new_seed
@@ -53,6 +56,11 @@ var _polygon_count: int = 0 :
 	set(new_polygon_count):
 		_polygon_count = new_polygon_count
 		_update_polygons(_polygon_count)
+
+
+func _ready() -> void:
+	if freeze:
+		_copy_existing_polygon_to_collisions()
 
 
 func refresh() -> void:
@@ -119,6 +127,28 @@ func _update_single_polygon() -> void:
 	polygon.collision.polygon = packed_array
 
 
+func _copy_existing_polygon_to_collisions() -> void:
+	if not polygons:
+		return
+
+	if polygons.size() == 1:
+		var polygon: Polygon = polygons.front()
+		polygon.points = $Display.polygon
+		polygon.collision.polygon = $Display.polygon
+		return
+
+	for i in range(polygons.size()):
+		var polygon: Polygon = polygons[i]
+		var points: PackedVector2Array = []
+		var count: int = $Display.polygons[i].size()
+		points.resize(count)
+		for j in range(count):
+			var index: int = $Display.polygons[i][j]
+			points[j] = $Display.polygon[index]
+		polygon.points = points
+		polygon.collision.polygon = points
+
+
 func _update_polygons(new_count: int) -> void:
 	var cur_count := polygons.size()
 	var diff := new_count - cur_count
@@ -131,6 +161,9 @@ func _update_polygons(new_count: int) -> void:
 
 
 func _refresh_deferred() -> void:
+	if freeze:
+		return
+
 	_pending_refresh = true
 	refresh.call_deferred()
 
