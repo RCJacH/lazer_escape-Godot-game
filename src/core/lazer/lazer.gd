@@ -32,14 +32,15 @@ func update() -> void:
 	var _hit_boundary := false
 	var length := get_viewport_rect().size.length()
 
-	var local_target_position := Vector2.from_angle(angle) * length
 	var collision_point: Vector2
 	var collision_normal: Vector2
 	var ray_direction: Vector2
+	var previous_positions: Array[Vector2] = []
+	var back_tracing := false
 	var i := 0
 
 	ray.global_position = global_position
-	ray.target_position = local_target_position
+	ray.target_position = Vector2.from_angle(angle) * length
 
 	while i < bounces:
 		ray.force_raycast_update()
@@ -50,9 +51,19 @@ func update() -> void:
 
 		collision_point = ray.get_collision_point()
 		if collision_point == ray.global_position:
-			ray.add_exception_rid(ray.get_collider_rid())
+			var previous_position: Vector2
+			if not back_tracing:
+				i -= 1
+				back_tracing = true
+				previous_position = previous_positions.back()
+			else:
+				previous_position = previous_positions.pop_back()
+				pass
+			ray.global_position = previous_position
+			ray.target_position = (ray_direction + Vector2.ONE * randf() * 0.0001) * length
 			continue
 
+		back_tracing = false
 		ray.clear_exceptions()
 		_draw_points.append(collision_point - global_position)
 		if collider is LevelBoundaries:
@@ -62,9 +73,9 @@ func update() -> void:
 		collision_normal = ray.get_collision_normal()
 		ray_direction = ray.global_position.direction_to(collision_point)
 		ray_direction = ray_direction.bounce(collision_normal)
+		previous_positions.append(ray.global_position)
 		ray.global_position = collision_point
 		ray.target_position = ray_direction * length
-		local_target_position = collision_point + ray.target_position - global_position
 		i += 1
 
 	if _hit_boundary:
