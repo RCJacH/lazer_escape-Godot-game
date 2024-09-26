@@ -6,25 +6,23 @@ class_name BounceableObstacleCave
 @export var radius: float = 128.0 :
 	set(new_radius):
 		radius = new_radius
-		_pending_refresh = true
-		refresh.call_deferred()
+		_refresh_deferred()
 @export var thickness: float = 8.0 :
 	set(new_thickness):
 		thickness = new_thickness
-		_pending_refresh = true
-		refresh.call_deferred()
-@export_range(0.0, 1.0) var openings: Array[float] = [0.5] :
+		_refresh_deferred()
+@export var openings: Array[Opening] = [] :
 	set(new_openings):
+		var to_refresh := true
+		if new_openings.size() > openings.size():
+			to_refresh = false
 		openings = new_openings
 		_polygon_count = openings.size()
 		_collision_count = openings.size()
-		_pending_refresh = true
-		refresh.call_deferred()
-@export_range(0.01, 0.5) var opening_width: float = 0.05 :
-	set(new_opening_width):
-		opening_width = new_opening_width
-		_pending_refresh = true
-		refresh.call_deferred()
+		if openings:
+			_connect_new_opening(openings.back())
+		if to_refresh:
+			_refresh_deferred()
 
 
 func refresh() -> void:
@@ -33,41 +31,77 @@ func refresh() -> void:
 
 	var inner_points: Array[Vector2] = []
 	var outer_points: Array[Vector2] = []
-	var opening_pcts := openings.duplicate()
-	var jagged_range := jaggedness - jaggedness * 0.5
-	opening_pcts.sort()
+	var sorted_openings := Opening.as_vectors(openings)
 	var i := 0
-	var is_opening: bool = false
-	var opening_close_pct: float = 0.0
-	var starting_deg: int = ceili(opening_pcts[0] * 360) if opening_pcts else 0
-	var ending_deg := starting_deg + 360
+	var closing_deg := 0.0
+	var current_opening: Vector2 = _get_next_opening(sorted_openings)
+	var starting_deg: float = current_opening.x if current_opening else 0.0
+	var previous_deg := 0.0
 
-	for deg in range(starting_deg, ending_deg, density):
-		var direction := Vector2.from_angle(deg_to_rad(deg + density * jagged_range * randomizer.randf()))
-		var inner := direction * (radius + thickness * jagged_range * randomizer.randf())
-		var outer := direction * (radius + thickness + thickness * jagged_range * randomizer.randf())
-		var pct: float = deg / 360.0
-		if opening_pcts:
-			if is_opening:
-				if pct >= opening_close_pct:
-					is_opening = false
-					opening_pcts.pop_front()
+	for n in range(_total_steps + 1):
+		var deg := n * density
+		var shifted_deg := starting_deg + deg
+		if deg >= 360:
+			shifted_deg -= 360.0
+		var d_deg := density * _randf()
+		if current_opening:
+			if closing_deg:
+				if shifted_deg + d_deg > closing_deg:
+					d_deg = current_opening.y - shifted_deg
+					closing_deg = 0.0
+					current_opening = _get_next_opening(sorted_openings)
 				else:
 					continue
-			elif pct >= opening_pcts.front():
-				is_opening = true
-				opening_close_pct = pct + opening_width - opening_width * jagged_range * randomizer.randf()
+			elif not previous_deg or (previous_deg < current_opening.x and shifted_deg + d_deg > current_opening.x):
+				d_deg = current_opening.x - shifted_deg
+				closing_deg = current_opening.y
+				if not previous_deg:
+					continue
 				if inner_points and outer_points:
+					_add_points(shifted_deg + d_deg, inner_points, outer_points)
 					polygons[i].points = _build_polygon_shape(inner_points, outer_points)
 					i += 1
-				continue
+					previous_deg = shifted_deg + d_deg
+					continue
 
-		inner_points.append(inner)
-		outer_points.append(outer)
+		_add_points(shifted_deg + d_deg, inner_points, outer_points)
+		previous_deg = shifted_deg + d_deg
+
 	if i < polygons.size():
 		polygons[i].points = _build_polygon_shape(inner_points, outer_points)
-	_update_data.call_deferred()
+		i += 1
+
+	while i < polygons.size():
+		polygons[i].points.clear()
+		i += 1
+
+	_update_data()
 	_pending_refresh = false
+
+
+func _connect_new_opening(new_opening: Opening) -> void:
+	if not new_opening is Opening:
+		return
+
+	if new_opening.changed.is_connected(_refresh_deferred):
+		return
+
+	new_opening.changed.connect(_refresh_deferred)
+
+
+func _get_next_opening(sorted_openings: Array[Vector2]) -> Vector2:
+	if not sorted_openings.size():
+		return Vector2.ZERO
+
+	return sorted_openings.pop_front() * 360.0
+
+
+func _add_points(deg: float, inner_points: Array[Vector2], outer_points: Array[Vector2]) -> void:
+	var direction := Vector2.from_angle(deg_to_rad(deg))
+	var inner := direction * (radius + thickness * _randf())
+	var outer := direction * (radius + thickness + thickness * _randf())
+	inner_points.append(inner)
+	outer_points.append(outer)
 
 
 func _build_polygon_shape(
@@ -78,6 +112,7 @@ func _build_polygon_shape(
 	points.append_array(inner_points)
 	outer_points.reverse()
 	points.append_array(outer_points)
+	# points.append(points[0])
 	inner_points.clear()
 	outer_points.clear()
 	return points

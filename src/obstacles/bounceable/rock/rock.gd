@@ -27,5 +27,5 @@ func refresh() -> void:
 		var point := direction * (radius + radius * jagged_range * randomizer.randf())
 		points.append(point)
 	polygons[0].points = points
-	_update_data.call_deferred()
+	_update_data()
 	_pending_refresh = false
