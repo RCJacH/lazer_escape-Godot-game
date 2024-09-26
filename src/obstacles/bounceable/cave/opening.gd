@@ -32,10 +32,10 @@ static func sort_by_weight(a: Opening, b: Opening) -> bool:
 	return a.weight <= b.weight
 
 
-static func as_vectors(openings: Array[Opening]) -> PackedVector2Array:
+static func as_vectors(openings: Array[Opening]) -> Array[Vector2]:
 	var sorted_openings: Array[Opening] = openings.duplicate()
 	sorted_openings.sort_custom(Opening.sort_by_position)
-	var result: PackedVector2Array = []
+	var result: Array[Vector2] = []
 	for opening in sorted_openings:
 		if not opening.width:
 			continue
