@@ -36,13 +36,14 @@ func refresh() -> void:
 	var current_opening: Vector2 = _get_next_opening(sorted_openings)
 	var starting_deg: float = current_opening.x if current_opening else 0.0
 	var previous_deg := 0.0
+	var step_deg := 360.0 / density
 
-	for n in range(_total_steps + 1):
-		var deg := n * density
+	for n in range(density + 1):
+		var deg := n * step_deg
 		var shifted_deg := starting_deg + deg
 		if deg >= 360:
 			shifted_deg -= 360.0
-		var d_deg := density * _randf()
+		var d_deg := step_deg * _randf()
 		if current_opening:
 			if closing_deg:
 				if shifted_deg + d_deg > closing_deg:

@@ -5,7 +5,6 @@ class_name Obstacle
 @export var density := Density.HIGH :
 	set(new_density):
 		density = new_density
-		_total_steps = floori(360.0 / density)
 		_refresh_deferred()
 @export_range(0.0, 1.0) var jaggedness: float = 0.1 :
 	set(new_jaggedness):
@@ -31,25 +30,24 @@ class_name Obstacle
 
 
 enum Density {
-	TRIANGLE = 180,
-	SQUARE = 90,
-	PENTAGON = 72,
-	HEXAGON = 60,
-	OCTAGON = 45,
-	NONAGON = 40,
-	DECAGON = 36,
-	DODECAGON = 30,
-	LOW = 24,
-	MID = 18,
-	HIGH = 10,
-	SUPERHIGH = 5,
+	TRIANGLE = 3,
+	SQUARE = 4,
+	PENTAGON = 5,
+	HEXAGON = 6,
+	OCTAGON = 8,
+	NONAGON = 9,
+	DECAGON = 10,
+	DODECAGON = 12,
+	LOW = 15,
+	MID = 20,
+	HIGH = 36,
+	SUPERHIGH = 72,
 }
 
 var polygons: Array[Polygon] = []
 var randomizer := RandomNumberGenerator.new()
 
 var _pending_refresh: bool = false
-var _total_steps: int = 1
 var _jagged_range := Vector2.ZERO
 var _polygon_count: int = 0 :
 	set(new_polygon_count):
