@@ -53,18 +53,16 @@ func update() -> void:
 		if collision_point == ray.global_position:
 			var previous_position: Vector2
 			if not back_tracing:
-				i -= 1
 				back_tracing = true
 				previous_position = previous_positions.back()
 			else:
 				previous_position = previous_positions.pop_back()
-				pass
 			ray.global_position = previous_position
 			ray.target_position = (ray_direction + Vector2.ONE * randf() * 0.0001) * length
+			i -= 1
 			continue
 
 		back_tracing = false
-		ray.clear_exceptions()
 		_draw_points.append(collision_point - global_position)
 		if collider is LevelBoundaries:
 			_hit_boundary = true

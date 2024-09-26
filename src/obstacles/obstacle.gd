@@ -62,10 +62,6 @@ var _collision_count: int = 0 :
 		_update_collisions(_collision_count)
 
 
-func _ready() -> void:
-	_refresh_deferred()
-
-
 func refresh() -> void:
 	pass
 
