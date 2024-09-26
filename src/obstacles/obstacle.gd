@@ -61,12 +61,13 @@ func refresh() -> void:
 	pass
 
 
-func _add_polygon(ref: Node = null) -> void:
+func _add_polygon(ref: Node = null) -> Polygon:
 	var polygon := Polygon.new()
 	if ref:
 		polygon.ref_node = ref
 	polygons.append(polygon)
 	add_child(polygon.collision)
+	return polygon
 
 
 func _remove_polygon(ref: Node = null) -> void:
