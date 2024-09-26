@@ -9,7 +9,7 @@ signal boundary_missed()
 
 var angle: float = 0.0
 
-var _draw_points: Array[Vector2] = [Vector2.ZERO]
+var _draw_points: PackedVector2Array = [Vector2.ZERO]
 
 @onready var ray: RayCast2D = $RayCast2D
 @onready var display: Line2D = $Line2D

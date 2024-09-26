@@ -104,7 +104,7 @@ func _update_data() -> void:
 func _update_multiple_polygons() -> void:
 	$Display.polygons = []
 	$Display.polygons.resize(polygons.size())
-	var points: Array[Vector2] = []
+	var points: PackedVector2Array = []
 	for i in range(polygons.size()):
 		var polygon: Polygon = polygons[i]
 		var count := points.size()

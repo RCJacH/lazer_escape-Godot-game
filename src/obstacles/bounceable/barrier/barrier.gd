@@ -87,8 +87,8 @@ func _split_line(
 	direction: Vector2,
 	point_count: int,
 	width: float,
-) -> Array[Vector2]:
-	var new_points: Array[Vector2] = []
+) -> PackedVector2Array:
+	var new_points: PackedVector2Array = []
 	var step_pct := 1.0 / (point_count - 1)
 	for i in range(point_count):
 		var new_point := point_a.lerp(point_b, step_pct * i + step_pct * 0.25 * _randf())
@@ -113,8 +113,8 @@ func _merge_intersection(points: Array[Vector2], new_points: Array[Vector2], ang
 func _build_polygon_shape(
 	inner_points: Array[Vector2],
 	outer_points: Array[Vector2],
-) -> Array[Vector2]:
-	var points: Array[Vector2] = []
+) -> PackedVector2Array:
+	var points: PackedVector2Array = []
 	points.append_array(inner_points)
 	outer_points.reverse()
 	points.append_array(outer_points)

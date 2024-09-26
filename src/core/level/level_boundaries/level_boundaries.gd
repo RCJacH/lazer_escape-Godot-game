@@ -23,7 +23,7 @@ func update_boundaries(rect: Rect2 = Rect2()) -> void:
 	if not rect:
 		rect = _get_rect()
 
-	var points: Array[Vector2] = _get_corners(rect.grow(-shrink_inner))
+	var points: PackedVector2Array = _get_corners(rect.grow(-shrink_inner))
 	var outer_corner := _get_corners(rect.grow(grow_outer))
 	outer_corner.reverse()
 	points.append_array(outer_corner)
@@ -31,7 +31,7 @@ func update_boundaries(rect: Rect2 = Rect2()) -> void:
 	update_polygon.bind(points).call_deferred()
 
 
-func update_polygon(points: Array[Vector2]) -> void:
+func update_polygon(points: PackedVector2Array) -> void:
 	$CollisionPolygon2D.polygon = PackedVector2Array(points)
 
 
@@ -46,7 +46,7 @@ func _get_rect() -> Rect2:
 	return get_viewport_rect()
 
 
-func _get_corners(rect: Rect2) -> Array[Vector2]:
+func _get_corners(rect: Rect2) -> PackedVector2Array:
 	return [
 		rect.position,
 		rect.position + Vector2(rect.size.x, 0.0),

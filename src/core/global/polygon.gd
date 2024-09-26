@@ -32,7 +32,7 @@ func append(v: Vector2) -> void:
 	points.append(v)
 
 
-func append_array(v: Array[Vector2]) -> void:
+func append_array(v: PackedVector2Array) -> void:
 	points.append_array(v)
 
 

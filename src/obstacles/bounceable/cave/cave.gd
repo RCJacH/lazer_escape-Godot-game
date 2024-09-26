@@ -28,8 +28,8 @@ func refresh() -> void:
 	if not _pending_refresh:
 		return
 
-	var inner_points: Array[Vector2] = []
-	var outer_points: Array[Vector2] = []
+	var inner_points: PackedVector2Array = []
+	var outer_points: PackedVector2Array = []
 	var sorted_openings := Opening.as_vectors(openings)
 	var i := 0
 	var closing_deg := 0.0
@@ -96,7 +96,7 @@ func _get_next_opening(sorted_openings: Array[Vector2]) -> Vector2:
 	return sorted_openings.pop_front() * 360.0
 
 
-func _add_points(deg: float, inner_points: Array[Vector2], outer_points: Array[Vector2]) -> void:
+func _add_points(deg: float, inner_points: PackedVector2Array, outer_points: PackedVector2Array) -> void:
 	var direction := Vector2.from_angle(deg_to_rad(deg))
 	var inner := direction * (radius + thickness * _randf())
 	var outer := direction * (radius + thickness + thickness * _randf())
@@ -105,10 +105,10 @@ func _add_points(deg: float, inner_points: Array[Vector2], outer_points: Array[V
 
 
 func _build_polygon_shape(
-	inner_points: Array[Vector2],
-	outer_points: Array[Vector2],
-) -> Array[Vector2]:
-	var points: Array[Vector2] = []
+	inner_points: PackedVector2Array,
+	outer_points: PackedVector2Array,
+) -> PackedVector2Array:
+	var points: PackedVector2Array = []
 	points.append_array(inner_points)
 	outer_points.reverse()
 	points.append_array(outer_points)
