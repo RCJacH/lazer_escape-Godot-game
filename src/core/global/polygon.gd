@@ -18,7 +18,9 @@ var _index_array: Array[int] = []
 
 
 func queue_free() -> void:
-	collision.get_parent().remove_child(collision)
+	var parent := collision.get_parent()
+	if parent:
+		parent.remove_child.call_deferred(collision)
 	collision.queue_free()
 
 

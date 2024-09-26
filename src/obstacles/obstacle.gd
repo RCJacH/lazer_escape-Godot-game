@@ -66,7 +66,7 @@ func _add_polygon(ref: Node = null) -> Polygon:
 	if ref:
 		polygon.ref_node = ref
 	polygons.append(polygon)
-	add_child(polygon.collision)
+	add_child.call_deferred(polygon.collision)
 	return polygon
 
 
