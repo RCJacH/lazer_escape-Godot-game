@@ -85,7 +85,6 @@ func _remove_polygon(ref: Node = null) -> void:
 
 	else:
 		polygon = polygons.pop_back()
-	remove_child(polygon.collision)
 	polygon.queue_free()
 
 
