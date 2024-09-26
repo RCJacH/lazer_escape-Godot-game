@@ -18,7 +18,6 @@ class_name BounceableObstacleCave
 			to_refresh = false
 		openings = new_openings
 		_polygon_count = openings.size()
-		_collision_count = openings.size()
 		if openings:
 			_connect_new_opening(openings.back())
 		if to_refresh:

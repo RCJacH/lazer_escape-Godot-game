@@ -11,12 +11,6 @@ class_name BounceableObstacleRock
 @export var initialize: bool = false:
 	set(new_value):
 		_polygon_count = 1
-		_collision_count = 1
-
-
-func _ready() -> void:
-	_polygon_count = 1
-	_collision_count = 1
 
 
 func refresh() -> void:

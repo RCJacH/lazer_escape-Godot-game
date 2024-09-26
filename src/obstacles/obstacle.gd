@@ -46,7 +46,6 @@ enum Density {
 }
 
 var polygons: Array[Polygon] = []
-var collisions: Array[CollisionPolygon2D] = []
 var randomizer := RandomNumberGenerator.new()
 
 var _pending_refresh: bool = false
@@ -56,14 +55,37 @@ var _polygon_count: int = 0 :
 	set(new_polygon_count):
 		_polygon_count = new_polygon_count
 		_update_polygons(_polygon_count)
-var _collision_count: int = 0 :
-	set(new_collision_count):
-		_collision_count = new_collision_count
-		_update_collisions(_collision_count)
 
 
 func refresh() -> void:
 	pass
+
+
+func _add_polygon(ref: Node = null) -> void:
+	var polygon := Polygon.new()
+	if ref:
+		polygon.ref_node = ref
+	polygons.append(polygon)
+	add_child(polygon.collision)
+
+
+func _remove_polygon(ref: Node = null) -> void:
+	if not polygons:
+		return
+
+	var polygon: Polygon
+	if ref:
+		for i in polygons.size():
+			polygon = polygons[i]
+			if polygon.ref_node == ref:
+				polygons.pop_at(i)
+				break
+		return
+
+	else:
+		polygon = polygons.pop_back()
+	remove_child(polygon.collision)
+	polygon.queue_free()
 
 
 func _update_data() -> void:
@@ -77,17 +99,12 @@ func _update_multiple_polygons() -> void:
 	$Display.polygons = []
 	$Display.polygons.resize(polygons.size())
 	var points: Array[Vector2] = []
-	var index_array: Array[int] = []
 	for i in range(polygons.size()):
-		var polygon := polygons[i]
-		var collision := collisions[i]
+		var polygon: Polygon = polygons[i]
 		var count := points.size()
 		points.append_array(polygon.points)
-		collision.polygon = PackedVector2Array(polygon.points)
-		for n in range(count, count + polygon.size()):
-			index_array.append(n)
-		$Display.polygons[i] = PackedInt32Array(index_array)
-		index_array = []
+		polygon.collision.polygon = PackedVector2Array(polygon.points)
+		$Display.polygons[i] = PackedInt32Array(polygon.index_array(count))
 	$Display.polygon = PackedVector2Array(points)
 
 
@@ -97,10 +114,11 @@ func _update_single_polygon() -> void:
 		$Display.polygons.clear()
 		return
 
-	var packed_array := PackedVector2Array(polygons.front().points)
+	var polygon: Polygon = polygons.front()
+	var packed_array := PackedVector2Array(polygon.points)
 	$Display.polygon = packed_array
 	$Display.polygons.clear()
-	collisions.front().polygon = packed_array
+	polygon.collision.polygon = packed_array
 
 
 func _update_polygons(new_count: int) -> void:
@@ -108,24 +126,10 @@ func _update_polygons(new_count: int) -> void:
 	var diff := new_count - cur_count
 	if diff >= 0:
 		for i in range(diff):
-			polygons.append(Polygon.new())
+			_add_polygon()
 	elif diff <= 0:
-		polygons.resize(new_count)
-
-
-func _update_collisions(new_count: int) -> void:
-	var cur_count := collisions.size()
-	var diff := new_count - cur_count
-	if diff > 0:
-		for i in range(diff):
-			var collision := CollisionPolygon2D.new()
-			collisions.append(collision)
-			add_child(collision)
-	elif diff < 0:
 		for i in range(-diff):
-			var collision := collisions[-1 - i]
-			collision.queue_free()
-		collisions.resize(new_count)
+			_remove_polygon()
 
 
 func _refresh_deferred() -> void:
