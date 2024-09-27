@@ -11,17 +11,11 @@ class_name BounceableObstacleRock
 @export var initialize: bool = false:
 	set(new_value):
 		_polygon_count = 1
-		_collision_count = 1
-
-
-func _ready() -> void:
-	_polygon_count = 1
-	_collision_count = 1
 
 
 func refresh() -> void:
 	var jagged_range := jaggedness - jaggedness * 0.5
-	var points: Array[Vector2] = []
+	var points: PackedVector2Array = []
 	for deg in range(0, 360, density):
 		var direction := Vector2.from_angle(deg_to_rad(deg + density * jagged_range * randomizer.randf()))
 		var point := direction * (radius + radius * jagged_range * randomizer.randf())

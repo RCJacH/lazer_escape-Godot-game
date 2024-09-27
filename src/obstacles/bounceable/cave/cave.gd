@@ -18,7 +18,6 @@ class_name BounceableObstacleCave
 			to_refresh = false
 		openings = new_openings
 		_polygon_count = openings.size()
-		_collision_count = openings.size()
 		if openings:
 			_connect_new_opening(openings.back())
 		if to_refresh:
@@ -29,21 +28,22 @@ func refresh() -> void:
 	if not _pending_refresh:
 		return
 
-	var inner_points: Array[Vector2] = []
-	var outer_points: Array[Vector2] = []
+	var inner_points: PackedVector2Array = []
+	var outer_points: PackedVector2Array = []
 	var sorted_openings := Opening.as_vectors(openings)
 	var i := 0
 	var closing_deg := 0.0
 	var current_opening: Vector2 = _get_next_opening(sorted_openings)
 	var starting_deg: float = current_opening.x if current_opening else 0.0
 	var previous_deg := 0.0
+	var step_deg := 360.0 / density
 
-	for n in range(_total_steps + 1):
-		var deg := n * density
+	for n in range(density + 1):
+		var deg := n * step_deg
 		var shifted_deg := starting_deg + deg
 		if deg >= 360:
 			shifted_deg -= 360.0
-		var d_deg := density * _randf()
+		var d_deg := step_deg * _randf()
 		if current_opening:
 			if closing_deg:
 				if shifted_deg + d_deg > closing_deg:
@@ -96,7 +96,7 @@ func _get_next_opening(sorted_openings: Array[Vector2]) -> Vector2:
 	return sorted_openings.pop_front() * 360.0
 
 
-func _add_points(deg: float, inner_points: Array[Vector2], outer_points: Array[Vector2]) -> void:
+func _add_points(deg: float, inner_points: PackedVector2Array, outer_points: PackedVector2Array) -> void:
 	var direction := Vector2.from_angle(deg_to_rad(deg))
 	var inner := direction * (radius + thickness * _randf())
 	var outer := direction * (radius + thickness + thickness * _randf())
@@ -105,10 +105,10 @@ func _add_points(deg: float, inner_points: Array[Vector2], outer_points: Array[V
 
 
 func _build_polygon_shape(
-	inner_points: Array[Vector2],
-	outer_points: Array[Vector2],
-) -> Array[Vector2]:
-	var points: Array[Vector2] = []
+	inner_points: PackedVector2Array,
+	outer_points: PackedVector2Array,
+) -> PackedVector2Array:
+	var points: PackedVector2Array = []
 	points.append_array(inner_points)
 	outer_points.reverse()
 	points.append_array(outer_points)

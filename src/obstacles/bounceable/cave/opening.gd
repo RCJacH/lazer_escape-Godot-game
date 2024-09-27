@@ -46,9 +46,11 @@ static func as_vectors(openings: Array[Opening]) -> Array[Vector2]:
 
 
 func as_vector() -> Vector2:
-	var start := position
+	var start := position - width * 0.5
 	if start >= 1.0:
 		start -= 1.0
+	elif start < 0.0:
+		start += 1.0
 	var end := start + width
 	return Vector2(start, end)
 
