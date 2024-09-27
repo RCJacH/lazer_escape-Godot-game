@@ -146,5 +146,6 @@ func _on_child_exiting_tree(node: Node) -> void:
 	var line: Line2D = node
 	if line.draw.is_connected(_on_line_redraw):
 		line.draw.disconnect(_on_line_redraw)
-	lines[line].queue_free()
-	lines.erase(node)
+	_remove_polygon(line)
+	lines.erase(line)
+	_refresh_deferred()
