@@ -87,8 +87,8 @@ func _split_line(
 	direction: Vector2,
 	point_count: int,
 	width: float,
-) -> PackedVector2Array:
-	var new_points: PackedVector2Array = []
+) -> Array[Vector2]:
+	var new_points: Array[Vector2] = []
 	var step_pct := 1.0 / (point_count - 1)
 	for i in range(point_count):
 		var new_point := point_a.lerp(point_b, step_pct * i + step_pct * 0.25 * _randf())
@@ -144,8 +144,7 @@ func _on_child_exiting_tree(node: Node) -> void:
 		return
 
 	var line: Line2D = node
-	if not line.draw.is_connected(_on_line_redraw):
-		return
-	line.draw.disconnect(_on_line_redraw)
+	if line.draw.is_connected(_on_line_redraw):
+		line.draw.disconnect(_on_line_redraw)
 	lines[line].queue_free()
 	lines.erase(node)
