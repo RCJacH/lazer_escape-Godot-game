@@ -5,16 +5,7 @@
 
 [node name="Barrier" instance=ExtResource("1_qwnpb")]
 script = ExtResource("2_g0tsb")
-density = 10
-jaggedness = 0.0
-random_seed = 1801268956
-
-[node name="Display" parent="." index="0"]
-polygon = PackedVector2Array(75.0428, 35.1756, 104.641, 79.034, 134.238, 122.892, 163.836, 166.751, 185.284, 198.225, 216.15, 178.625, 259.4, 150.875, 302.65, 123.125, 357.252, 87.0772, 389.693, 127.567, 413.835, 156.705, 437.978, 185.842, 462.121, 214.98, 439.02, 234.121, 414.877, 204.983, 390.735, 175.845, 366.592, 146.708, 350.748, 128.923, 318.85, 148.375, 275.6, 176.125, 232.35, 203.875, 176.716, 239.775, 138.969, 183.532, 109.371, 139.674, 79.7733, 95.8156, 50.1756, 51.9572)
-
-[node name="Line2D" type="Line2D" parent="." index="1"]
-points = PackedVector2Array(71, 56, 181, 219, 354, 108, 441, 213)
-width = 30.0
+density = 4
 
 [connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
 [connection signal="child_exiting_tree" from="." to="." method="_on_child_exiting_tree"]
