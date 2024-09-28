@@ -27,33 +27,34 @@ position = Vector2(561, 279)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="ControlParser" type="Control" parent="CanvasLayer"]
-layout_mode = 3
+[node name="Viewport" type="VBoxContainer" parent="CanvasLayer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_lock_ = true
+
+[node name="ControlParser" type="Control" parent="CanvasLayer/Viewport"]
+layout_mode = 2
+size_flags_vertical = 3
 script = ExtResource("2_dnff1")
 metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
 
-[node name="Viewport" type="VBoxContainer" parent="."]
+[node name="LevelBlock" type="Control" parent="CanvasLayer/Viewport/ControlParser"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-metadata/_edit_lock_ = true
-
-[node name="LevelBlock" type="Control" parent="Viewport"]
-layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 1
 metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
 
-[node name="MarginContainer" type="MarginContainer" parent="Viewport/LevelBlock"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Viewport/ControlParser/LevelBlock"]
 custom_minimum_size = Vector2(256, 0)
 layout_mode = 1
 anchors_preset = 2
@@ -69,26 +70,26 @@ theme_override_constants/margin_bottom = 16
 metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Viewport/LevelBlock/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Viewport/ControlParser/LevelBlock/MarginContainer"]
 layout_mode = 2
 metadata/_edit_lock_ = true
 
-[node name="AngleLabel" type="Label" parent="Viewport/LevelBlock/MarginContainer/VBoxContainer"]
+[node name="AngleLabel" type="Label" parent="CanvasLayer/Viewport/ControlParser/LevelBlock/MarginContainer/VBoxContainer"]
 layout_mode = 2
 vertical_alignment = 1
 script = ExtResource("5_d81yi")
 metadata/_edit_lock_ = true
 
-[node name="LevelBoundaries" parent="Viewport/LevelBlock" instance=ExtResource("2_bot5h")]
+[node name="LevelBoundaries" parent="CanvasLayer/Viewport/ControlParser/LevelBlock" instance=ExtResource("2_bot5h")]
 metadata/_edit_lock_ = true
 
-[node name="ControlPanel" type="Panel" parent="Viewport"]
+[node name="ControlPanel" type="Panel" parent="CanvasLayer/Viewport"]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 
 [connection signal="all_target_hit" from="LazerHost" to="." method="_on_lazer_host_all_target_hit"]
-[connection signal="angle_changed" from="LazerHost/Lazer" to="Viewport/LevelBlock/MarginContainer/VBoxContainer/AngleLabel" method="_on_lazer_angle_changed"]
-[connection signal="gui_input" from="CanvasLayer/ControlParser" to="CanvasLayer/ControlParser" method="_on_gui_input"]
-[connection signal="mouse_moved" from="CanvasLayer/ControlParser" to="LazerHost" method="_on_control_parser_mouse_moved"]
-[connection signal="wheel_down_pressed" from="CanvasLayer/ControlParser" to="LazerHost" method="_on_control_parser_wheel_down_pressed"]
-[connection signal="wheel_up_pressed" from="CanvasLayer/ControlParser" to="LazerHost" method="_on_control_parser_wheel_up_pressed"]
+[connection signal="angle_changed" from="LazerHost/Lazer" to="CanvasLayer/Viewport/ControlParser/LevelBlock/MarginContainer/VBoxContainer/AngleLabel" method="_on_lazer_angle_changed"]
+[connection signal="gui_input" from="CanvasLayer/Viewport/ControlParser" to="CanvasLayer/Viewport/ControlParser" method="_on_gui_input"]
+[connection signal="mouse_moved" from="CanvasLayer/Viewport/ControlParser" to="LazerHost" method="_on_control_parser_mouse_moved"]
+[connection signal="wheel_down_pressed" from="CanvasLayer/Viewport/ControlParser" to="LazerHost" method="_on_control_parser_wheel_down_pressed"]
+[connection signal="wheel_up_pressed" from="CanvasLayer/Viewport/ControlParser" to="LazerHost" method="_on_control_parser_wheel_up_pressed"]
