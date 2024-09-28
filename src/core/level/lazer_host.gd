@@ -36,8 +36,10 @@ func _on_control_parser_mouse_moved(mouse_position: Vector2, relative: Vector2) 
 
 
 func _on_control_parser_wheel_down_pressed(ctrl, alt, shift):
-	pass # Replace with function body.
+	for child: Lazer in get_children():
+		child.adjust_angle(-0.000001)
 
 
 func _on_control_parser_wheel_up_pressed(ctrl, alt, shift):
-	pass # Replace with function body.
+	for child: Lazer in get_children():
+		child.adjust_angle(0.000001)
