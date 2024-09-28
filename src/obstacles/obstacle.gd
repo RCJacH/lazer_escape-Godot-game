@@ -6,6 +6,8 @@ class_name Obstacle
 	set(new_density):
 		density = new_density
 		_refresh_deferred()
+@export var bounceable: bool = false
+@export var health: float = 0.0
 @export_range(0.0, 1.0) var jaggedness: float = 0.1 :
 	set(new_jaggedness):
 		jaggedness = new_jaggedness
