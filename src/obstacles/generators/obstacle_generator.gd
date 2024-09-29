@@ -29,7 +29,10 @@ class_name ObstacleGenerator
 		random_seed = randi()
 @export var call_refresh: bool = false :
 	set(new_value):
+		var old_freeze := freeze
+		freeze = false
 		_refresh_deferred()
+		freeze = old_freeze
 
 
 enum Density {
