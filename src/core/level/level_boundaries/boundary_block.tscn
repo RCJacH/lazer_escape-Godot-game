@@ -1,0 +1,64 @@
+[gd_scene load_steps=5 format=3 uid="uid://bfc3s2ded536f"]
+
+[ext_resource type="PackedScene" uid="uid://naj2gkimrq2a" path="res://src/obstacles/generators/boundary/boundary.tscn" id="1_ibed3"]
+[ext_resource type="Script" path="res://src/core/level/level_boundaries/boundary_block.gd" id="1_otakd"]
+[ext_resource type="Script" path="res://src/core/level/level_ui/info/angle_label.gd" id="2_cgf1x"]
+[ext_resource type="Script" path="res://src/core/lazer/lazer.gd" id="2_n7bhc"]
+
+[node name="BoundaryBlock" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("1_otakd")
+
+[node name="Boundary" parent="." instance=ExtResource("1_ibed3")]
+unique_name_in_owner = true
+random_seed = 3917188777
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Lazer" type="Node2D" parent="CenterContainer"]
+unique_name_in_owner = true
+script = ExtResource("2_n7bhc")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_right = 128.0
+grow_vertical = 0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 16
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+metadata/_edit_lock_ = true
+
+[node name="AngleLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 1
+vertical_alignment = 1
+script = ExtResource("2_cgf1x")
+metadata/_edit_lock_ = true
+
+[connection signal="angle_changed" from="CenterContainer/Lazer" to="MarginContainer/VBoxContainer/AngleLabel" method="_on_lazer_angle_changed"]
