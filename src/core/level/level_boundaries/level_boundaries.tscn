@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://12i7ql5u7day"]
+
+[ext_resource type="Script" path="res://src/core/level/level_boundaries/level_boundaries.gd" id="1_aqw7l"]
+
+[node name="LevelBoundaries" type="GridContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_aqw7l")
+block_path = "res://src/core/level/level_boundaries/boundary_block.gd"
+metadata/_edit_use_anchors_ = true
+
+[connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
+[connection signal="child_exiting_tree" from="." to="." method="_on_child_exiting_tree"]
