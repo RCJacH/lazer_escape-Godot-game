@@ -1,3 +1,4 @@
+@tool
 extends Obstacle
 class_name ObstacleGenerator
 
