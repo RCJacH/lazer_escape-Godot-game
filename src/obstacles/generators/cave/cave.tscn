@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://cgsx78wdmw5j5"]
 
-[ext_resource type="PackedScene" uid="uid://wjbnu7hhohv8" path="res://src/obstacles/bounceable/bounceable_obstacle.tscn" id="1_ysi24"]
-[ext_resource type="Script" path="res://src/obstacles/bounceable/cave/cave.gd" id="2_scr4i"]
-[ext_resource type="Script" path="res://src/obstacles/bounceable/cave/opening.gd" id="3_wun6e"]
+[ext_resource type="PackedScene" uid="uid://cml35p82e3rti" path="res://src/obstacles/generators/obstacle_generator.tscn" id="1_ysi24"]
+[ext_resource type="Script" path="res://src/obstacles/generators/cave/cave.gd" id="2_scr4i"]
+[ext_resource type="Script" path="res://src/obstacles/generators/cave/opening.gd" id="3_wun6e"]
 
 [sub_resource type="Resource" id="Resource_xeotp"]
 script = ExtResource("3_wun6e")

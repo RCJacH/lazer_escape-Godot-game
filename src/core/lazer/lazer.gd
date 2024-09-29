@@ -2,8 +2,7 @@ extends Node2D
 class_name Lazer
 
 signal angle_changed(new_angle: float)
-signal boundary_hit()
-signal boundary_missed()
+signal casting_finished()
 
 @export var bounces := 1
 
@@ -11,7 +10,6 @@ var angle: float = 0.0
 
 var _draw_points: PackedVector2Array = [Vector2.ZERO]
 
-@onready var ray: RayCast2D = $RayCast2D
 @onready var display: Line2D = $Line2D
 
 
@@ -29,56 +27,27 @@ func adjust_angle(d_angle: float) -> void:
 
 func update() -> void:
 	_draw_points.resize(1)
-	var _hit_boundary := false
-	var length := get_viewport_rect().size.length()
 
-	var collision_point: Vector2
-	var collision_normal: Vector2
-	var ray_direction: Vector2
-	var previous_positions: Array[Vector2] = []
-	var back_tracing := false
-	var i := 0
+	Collision.setup(
+		get_world_2d().direct_space_state,
+		get_viewport_rect().size.length()
+	)
+	var previous_positions := PackedVector2Array()
 
-	ray.global_position = global_position
-	ray.target_position = Vector2.from_angle(angle) * length
+	var collision_result := Collision.create(
+		global_position,
+		Vector2.from_angle(angle),
+	)
 
-	while i < bounces:
-		ray.force_raycast_update()
-		if not ray.is_colliding():
-			break
+	if collision_result.collider:
+		previous_positions = collision_result.collider.on_lazer_hit(
+			bounces,
+			collision_result,
+			previous_positions
+		)
 
-		var collider := ray.get_collider()
+	for point in previous_positions:
+		_draw_points.append(point - global_position)
 
-		collision_point = ray.get_collision_point()
-		if collision_point == ray.global_position:
-			var previous_position: Vector2
-			if not back_tracing:
-				back_tracing = true
-				previous_position = previous_positions.back()
-			else:
-				previous_position = previous_positions.pop_back()
-			ray.global_position = previous_position
-			ray.target_position = (ray_direction + Vector2.ONE * randf() * 0.0001) * length
-			i -= 1
-			continue
-
-		back_tracing = false
-		_draw_points.append(collision_point - global_position)
-		if collider is LevelBoundaries:
-			_hit_boundary = true
-			break
-
-		collision_normal = ray.get_collision_normal()
-		ray_direction = ray.global_position.direction_to(collision_point)
-		ray_direction = ray_direction.bounce(collision_normal)
-		previous_positions.append(ray.global_position)
-		ray.global_position = collision_point
-		ray.target_position = ray_direction * length
-		i += 1
-
-	if _hit_boundary:
-		boundary_hit.emit()
-	else:
-		boundary_missed.emit()
-
-	display.points = PackedVector2Array(_draw_points)
+	display.points = _draw_points
+	casting_finished.emit()

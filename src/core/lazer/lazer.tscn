@@ -5,9 +5,6 @@
 [node name="Lazer" type="Node2D"]
 script = ExtResource("1_jedfl")
 
-[node name="RayCast2D" type="RayCast2D" parent="."]
-collide_with_areas = true
-
 [node name="Line2D" type="Line2D" parent="."]
 width = 2.0
 joint_mode = 1

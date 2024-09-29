@@ -12,8 +12,6 @@ func _ready() -> void:
 	target_bool.fill(false)
 	for i in range(target_count):
 		var child: Lazer = get_child(i)
-		child.boundary_hit.connect(_on_lazer_boundary_hit.bind(i))
-		child.boundary_missed.connect(_on_lazer_boundary_missed.bind(i))
 
 
 func _check_target() -> void:

@@ -1,6 +1,6 @@
 @tool
-extends BounceableObstacle
-class_name BounceableObstacleBarrier
+extends ObstacleGenerator
+class_name ObstacleGeneratorBarrier
 
 var lines: Dictionary = {}
 

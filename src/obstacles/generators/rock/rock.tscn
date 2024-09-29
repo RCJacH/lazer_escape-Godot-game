@@ -1,13 +1,13 @@
 [gd_scene load_steps=3 format=3 uid="uid://bnqcijapmmg00"]
 
-[ext_resource type="PackedScene" uid="uid://wjbnu7hhohv8" path="res://src/obstacles/bounceable/bounceable_obstacle.tscn" id="1_aeb8y"]
-[ext_resource type="Script" path="res://src/obstacles/bounceable/rock/rock.gd" id="2_54nds"]
+[ext_resource type="PackedScene" uid="uid://wjbnu7hhohv8" path="res://src/obstacles/obstacle.tscn" id="1_aeb8y"]
+[ext_resource type="Script" path="res://src/obstacles/generators/rock/rock.gd" id="2_54nds"]
 
 [node name="Rock" instance=ExtResource("1_aeb8y")]
 script = ExtResource("2_54nds")
 radius = 64.0
 initialize = false
-random_seed = 388122639
+random_seed = 1
 
 [node name="Display" parent="." index="0"]
 polygon = PackedVector2Array(64.957, 0.25686, 63.0073, 11.4562, 62.1908, 22.6978, 56.7046, 33.3904, 49.6356, 42.2839, 41.7084, 50.2594, 32.2956, 56.399, 21.9601, 61.8746, 11.2521, 66.2437, -0.296278, 64.9196, -11.8995, 64.866, -23.0215, 61.6818, -33.6414, 57.8263, -42.7117, 50.3851, -51.6172, 42.5716, -57.0655, 32.3303, -61.8412, 21.9653, -63.367, 11.1088, -65.8442, -0.324857, -65.9812, -11.7604, -60.1927, -22.3537, -55.5, -32.4938, -50.1671, -42.5246, -43.0585, -51.525, -32.2228, -56.8196, -22.6579, -63.1388, -11.4486, -65.7328, 0.528077, -66.5404, 11.8037, -63.7836, 22.4453, -60.8539, 33.4219, -57.071, 42.9742, -50.3723, 51.4649, -42.522, 56.4089, -32.1759, 60.5436, -21.7616, 63.1451, -10.767)
