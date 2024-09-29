@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://naj2gkimrq2a"]
+
+[ext_resource type="PackedScene" uid="uid://cml35p82e3rti" path="res://src/obstacles/generators/obstacle_generator.tscn" id="1_swhkw"]
+[ext_resource type="Script" path="res://src/obstacles/generators/boundary/boundary.gd" id="2_4bx5d"]
+
+[node name="Boundary" instance=ExtResource("1_swhkw")]
+script = ExtResource("2_4bx5d")
+shrink_inner = 10.0
+grow_outer = 10.0
+freeze = false
+
+[node name="Display" parent="." index="0"]
+polygon = PackedVector2Array(10, 10, 752, 10, 752, 452, 10, 452, 10, 10, -10, -10, -10, 472, 772, 472, 772, -10, -10, -10, 10, 10)
