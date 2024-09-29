@@ -25,10 +25,10 @@ func on_lazer_hit(
 		return previous_positions
 
 	var new_result = Collision.bounce(collision_result)
-	if not new_result.collider:
-		return previous_positions
-
 	while true:
+		if not new_result.collider:
+			return previous_positions
+
 		if not collision_result.is_stuck():
 			break
 
