@@ -9,6 +9,10 @@ signal locked()
 	set(new_lazer_position):
 		lazer_position = new_lazer_position
 		position_lazer.call_deferred()
+@export var lazer_bounce_count: int = 0:
+	set(new_lazer_bounce_count):
+		lazer_bounce_count = new_lazer_bounce_count
+		%Lazer.bounces = lazer_bounce_count
 @export var displayed_size: float = 10.0:
 	set(new_size):
 		displayed_size = new_size
