@@ -9,7 +9,7 @@ signal locked()
 	set(new_lazer_position):
 		lazer_position = new_lazer_position
 		position_lazer.call_deferred()
-@export var lazer_bounce_count: int = 0:
+@export var lazer_bounce_count: int:
 	set(new_lazer_bounce_count):
 		lazer_bounce_count = new_lazer_bounce_count
 		%Lazer.bounces = lazer_bounce_count
