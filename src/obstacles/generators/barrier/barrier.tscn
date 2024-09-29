@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://s7qiaci5q74j"]
 
-[ext_resource type="PackedScene" uid="uid://wjbnu7hhohv8" path="res://src/obstacles/bounceable/bounceable_obstacle.tscn" id="1_qwnpb"]
-[ext_resource type="Script" path="res://src/obstacles/bounceable/barrier/barrier.gd" id="2_g0tsb"]
+[ext_resource type="PackedScene" uid="uid://wjbnu7hhohv8" path="res://src/obstacles/obstacle.tscn" id="1_qwnpb"]
+[ext_resource type="Script" path="res://src/obstacles/generators/barrier/barrier.gd" id="2_g0tsb"]
 
 [node name="Barrier" instance=ExtResource("1_qwnpb")]
 script = ExtResource("2_g0tsb")

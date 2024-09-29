@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://cgsx78wdmw5j5"]
 
 [ext_resource type="PackedScene" uid="uid://wjbnu7hhohv8" path="res://src/obstacles/bounceable/bounceable_obstacle.tscn" id="1_ysi24"]
-[ext_resource type="Script" path="res://src/obstacles/bounceable/cave/cave.gd" id="2_scr4i"]
-[ext_resource type="Script" path="res://src/obstacles/bounceable/cave/opening.gd" id="3_wun6e"]
+[ext_resource type="Script" path="res://src/obstacles/generators/cave/cave.gd" id="2_scr4i"]
+[ext_resource type="Script" path="res://src/obstacles/generators/cave/opening.gd" id="3_wun6e"]
 
 [sub_resource type="Resource" id="Resource_xeotp"]
 script = ExtResource("3_wun6e")
@@ -14,6 +14,13 @@ script = ExtResource("2_scr4i")
 radius = 128.0
 thickness = 8.0
 openings = Array[ExtResource("3_wun6e")]([SubResource("Resource_xeotp")])
+density = 36
+jaggedness = 0.1
+do_not_connect = false
+freeze = true
+random_seed = 1
+randomize_seed = false
+call_refresh = false
 
 [node name="Display" parent="." index="0"]
 polygon = PackedVector2Array(-122.096, -39.6714, -110.548, -64.6809, -98.0786, -82.7174, -81.7352, -98.1365, -63.687, -110.807, -43.9168, -119.908, -21.3393, -126.585, 0.219772, -128.204, 21.4795, -125.824, 43.3386, -120.468, 63.3587, -110.989, 83.2262, -97.4591, 97.3342, -82.9522, 110.829, -63.2534, 119.687, -44.7457, 126.169, -22.4327, 128.086, -0.613495, 125.843, 21.2157, 120.389, 42.6507, 111.161, 63.5021, 98.8736, 81.8242, 82.0598, 97.9612, 63.1729, 111.187, 43.4429, 120.079, 21.7449, 126.096, 0.762011, 128.26, -21.8881, 126.383, -43.1547, 120.349, -63.1343, 111.299, -82.3964, 97.6279, -97.7561, 83.1806, -110.256, 64.2873, -120.029, 43.555, -125.804, 21.7739, -127.712, 0.875316, -136.264, 0.933929, -134.353, 23.2535, -128.212, 46.5244, -117.811, 68.6922, -103.33, 87.9233, -87.9279, 104.182, -67.0167, 118.143, -45.9503, 128.145, -23.1635, 133.747, 0.809036, 136.176, 23.1359, 134.162, 46.2592, 127.863, 67.232, 118.331, 87.2969, 104.213, 104.555, 86.5261, 118.359, 67.6139, 128.074, 45.3733, 134.376, 22.6544, 136.173, -0.652228, 134.023, -23.8291, 127.655, -47.7244, 117.997, -67.3445, 103.664, -88.347, 88.4033, -103.522, 67.313, -117.916, 45.9455, -127.715, 22.9429, -134.397, 0.232473, -135.613, -22.6466, -134.34, -46.7605, -127.672, -67.8076, -117.977, -86.8156, -104.236, -104.154, -87.841, -117.588, -68.8002, -129.418, -42.0506)

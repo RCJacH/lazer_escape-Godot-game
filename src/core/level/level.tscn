@@ -87,7 +87,6 @@ metadata/_edit_lock_ = true
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 
-[connection signal="all_target_hit" from="LazerHost" to="." method="_on_lazer_host_all_target_hit"]
 [connection signal="angle_changed" from="LazerHost/Lazer" to="CanvasLayer/Viewport/ControlParser/LevelBlock/MarginContainer/VBoxContainer/AngleLabel" method="_on_lazer_angle_changed"]
 [connection signal="gui_input" from="CanvasLayer/Viewport/ControlParser" to="CanvasLayer/Viewport/ControlParser" method="_on_gui_input"]
 [connection signal="mouse_moved" from="CanvasLayer/Viewport/ControlParser" to="LazerHost" method="_on_control_parser_mouse_moved"]

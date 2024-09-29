@@ -1,6 +1,6 @@
 @tool
-extends BounceableObstacle
-class_name BounceableObstacleCave
+extends ObstacleGenerator
+class_name ObstacleGeneratorCave
 
 
 @export var radius: float = 128.0 :

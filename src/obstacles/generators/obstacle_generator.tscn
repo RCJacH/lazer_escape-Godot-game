@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://cml35p82e3rti"]
+
+[ext_resource type="PackedScene" uid="uid://dfw685rvfctgh" path="res://src/obstacles/obstacle.tscn" id="1_c80ko"]
+[ext_resource type="Script" path="res://src/obstacles/generators/obstacle_generator.gd" id="2_303g2"]
+
+[node name="ObstacleGenerator" instance=ExtResource("1_c80ko")]
+script = ExtResource("2_303g2")
+density = 36
+jaggedness = 0.1
+do_not_connect = false
+freeze = true
+random_seed = 1
+randomize_seed = false
+call_refresh = false
