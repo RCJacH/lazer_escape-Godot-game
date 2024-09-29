@@ -37,11 +37,11 @@ func refresh() -> void:
 
 func _get_rect() -> Rect2:
 	if rect_ref:
-		return Rect2(rect_ref.position, rect_ref.size)
+		return Rect2(rect_ref.global_position - global_position, rect_ref.size)
 
 	var parent := get_parent()
 	if parent is Control:
-		return Rect2(parent.position, parent.size)
+		return Rect2(parent.global_position - global_position, parent.size)
 
 	return get_viewport_rect()
 
