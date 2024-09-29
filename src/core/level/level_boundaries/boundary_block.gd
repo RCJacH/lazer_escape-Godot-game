@@ -24,6 +24,14 @@ func request_refresh() -> void:
 	%Boundary.refresh.call_deferred()
 
 
+func from_position(mouse_position: Vector2) -> void:
+	%Lazer.from_position(mouse_position)
+
+
+func adjust_angle(d_angle: float) -> void:
+	%Lazer.adjust_angle(d_angle)
+
+
 func _on_boundary_hit_by_lazer():
 	%Timer.start()
 

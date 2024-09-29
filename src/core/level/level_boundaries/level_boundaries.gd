@@ -46,3 +46,18 @@ func _on_child_exiting_tree(node):
 	visible_block_count -= 1
 	boundary.visibility_changed.disconnect(_on_boundary_visibility_changed)
 	_update_blocks()
+
+
+func _on_control_parser_mouse_moved(mouse_position, relative):
+	for child: BoundaryBlock in get_children():
+		child.from_position(mouse_position)
+
+
+func _on_control_parser_wheel_down_pressed(ctrl, alt, shift):
+	for child: BoundaryBlock in get_children():
+		child.adjust_angle(-0.000001)
+
+
+func _on_control_parser_wheel_up_pressed(ctrl, alt, shift):
+	for child: BoundaryBlock in get_children():
+		child.adjust_angle(0.000001)
