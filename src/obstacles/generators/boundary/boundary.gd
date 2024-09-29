@@ -22,6 +22,7 @@ func _ready() -> void:
 
 
 func refresh() -> void:
+	_polygon_count = 1
 	var rect := _get_rect()
 
 	var points: PackedVector2Array = _get_corners(rect.grow(-shrink_inner))
