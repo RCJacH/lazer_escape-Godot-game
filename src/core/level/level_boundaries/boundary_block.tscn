@@ -3,9 +3,10 @@
 [ext_resource type="PackedScene" uid="uid://naj2gkimrq2a" path="res://src/obstacles/generators/boundary/boundary.tscn" id="1_ibed3"]
 [ext_resource type="Script" path="res://src/core/level/level_boundaries/boundary_block.gd" id="1_otakd"]
 [ext_resource type="Script" path="res://src/core/level/level_ui/info/angle_label.gd" id="2_cgf1x"]
-[ext_resource type="Script" path="res://src/core/lazer/lazer.gd" id="2_n7bhc"]
+[ext_resource type="PackedScene" uid="uid://cwggn3r25h120" path="res://src/core/lazer/lazer.tscn" id="3_x2wro"]
 
 [node name="BoundaryBlock" type="Control"]
+clip_contents = true
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -16,23 +17,17 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 1
 script = ExtResource("1_otakd")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
 
 [node name="Boundary" parent="." instance=ExtResource("1_ibed3")]
 unique_name_in_owner = true
 random_seed = 3917188777
+metadata/_edit_lock_ = true
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="Lazer" type="Node2D" parent="CenterContainer"]
+[node name="Lazer" parent="." instance=ExtResource("3_x2wro")]
 unique_name_in_owner = true
-script = ExtResource("2_n7bhc")
+metadata/_edit_lock_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(256, 0)
@@ -61,4 +56,6 @@ vertical_alignment = 1
 script = ExtResource("2_cgf1x")
 metadata/_edit_lock_ = true
 
-[connection signal="angle_changed" from="CenterContainer/Lazer" to="MarginContainer/VBoxContainer/AngleLabel" method="_on_lazer_angle_changed"]
+[connection signal="resized" from="." to="Boundary" method="refresh"]
+[connection signal="tree_entered" from="." to="Boundary" method="refresh"]
+[connection signal="angle_changed" from="Lazer" to="MarginContainer/VBoxContainer/AngleLabel" method="_on_lazer_angle_changed"]
