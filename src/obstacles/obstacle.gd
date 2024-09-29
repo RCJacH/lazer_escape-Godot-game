@@ -65,6 +65,34 @@ func _ready() -> void:
 		_copy_existing_polygon_to_collisions()
 
 
+func on_lazer_hit(
+	bounce_remaining: int,
+	collision_result: Collision,
+	previous_positions: Array[Vector2],
+) -> PackedVector2Array:
+	previous_positions.append(collision_result.collision_point)
+
+	if not bounceable or not bounce_remaining:
+		return previous_positions
+
+	var new_result = Collision.bounce(collision_result)
+	if not new_result.collider:
+		return previous_positions
+
+	while true:
+		if not collision_result.is_stuck():
+			break
+
+		print("stuck")
+		new_result = new_result.back_trace()
+
+	return new_result.collider.on_lazer_hit(
+		bounce_remaining - 1,
+		new_result,
+		previous_positions,
+	)
+
+
 func refresh() -> void:
 	pass
 
