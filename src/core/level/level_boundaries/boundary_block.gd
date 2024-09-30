@@ -23,6 +23,12 @@ var unlock_duration: float = 3.0 :
 		unlock_duration = new_duration
 		%Timer.wait_time = unlock_duration
 
+var is_unlocking := false
+
+
+func _process(_delta: float) -> void:
+	is_unlocking = false
+
 
 func position_lazer() -> void:
 	%Lazer.position = size * lazer_position
@@ -42,10 +48,14 @@ func adjust_angle(d_angle: float) -> void:
 
 
 func _on_boundary_hit_by_lazer():
+	is_unlocking = true
 	%Timer.start()
 
 
 func _on_lazer_casting_finished():
+	if is_unlocking:
+		return
+
 	%Timer.stop()
 	locked.emit()
 

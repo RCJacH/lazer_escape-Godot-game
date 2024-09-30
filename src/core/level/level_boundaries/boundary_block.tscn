@@ -60,6 +60,7 @@ metadata/_edit_lock_ = true
 
 [node name="Timer" type="Timer" parent="."]
 unique_name_in_owner = true
+one_shot = true
 
 [connection signal="resized" from="." to="." method="request_refresh"]
 [connection signal="tree_entered" from="." to="Boundary" method="refresh"]

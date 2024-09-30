@@ -2,5 +2,5 @@
 extends Node2D
 
 
-func _on_lazer_host_all_target_hit():
+func _on_level_boundaries_all_unlocked():
 	print("YOU WIN")
