@@ -2,7 +2,13 @@
 extends GridContainer
 class_name LevelBoundaries
 
-@export_file("boundary_block.gd") var block_path: String
+@export_file("boundary_block.tscn") var block_path: String
+@export var add_boundary: bool = false :
+	set(pressed):
+		if not pressed:
+			return
+
+		_add_block.call_deferred()
 
 var visible_block_count: int = 0
 
@@ -18,6 +24,11 @@ func _update_blocks() -> void:
 	for child in get_children():
 		if child is BoundaryBlock:
 			child.request_refresh()
+
+
+func _add_block() -> void:
+	add_child(block_scene.instantiate())
+	queue_redraw()
 
 
 func _on_boundary_visibility_changed() -> void:
