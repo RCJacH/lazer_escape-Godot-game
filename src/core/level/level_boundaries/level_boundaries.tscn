@@ -1,12 +1,19 @@
-[gd_scene load_steps=2 format=3 uid="uid://cd00ciib5wud0"]
+[gd_scene load_steps=2 format=3 uid="uid://12i7ql5u7day"]
 
 [ext_resource type="Script" path="res://src/core/level/level_boundaries/level_boundaries.gd" id="1_aqw7l"]
 
-[node name="LevelBoundaries" type="Area2D"]
-input_pickable = false
+[node name="LevelBoundaries" type="GridContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_aqw7l")
-shrink_inner = 36.0
-grow_outer = 36.0
+block_path = "res://src/core/level/level_boundaries/boundary_block.tscn"
+add_boundary = null
+metadata/_edit_use_anchors_ = true
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(36, 36, 861, 36, 861, 462, 36, 462, 36, 36, -36, -36, -36, 534, 933, 534, 933, -36, -36, -36, 36, 36)
+[connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
+[connection signal="child_exiting_tree" from="." to="." method="_on_child_exiting_tree"]

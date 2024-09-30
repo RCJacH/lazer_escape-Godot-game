@@ -2,6 +2,8 @@
 extends StaticBody2D
 class_name Obstacle
 
+signal hit_by_lazer()
+
 @export var bounceable: bool = false
 @export var health: float = 0.0
 
@@ -20,7 +22,7 @@ func on_lazer_hit(
 	previous_positions: Array[Vector2],
 ) -> PackedVector2Array:
 	previous_positions.append(collision_result.collision_point)
-
+	hit_by_lazer.emit()
 	if not bounceable or not bounce_remaining:
 		return previous_positions
 

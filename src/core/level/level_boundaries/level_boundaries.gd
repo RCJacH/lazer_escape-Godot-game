@@ -1,56 +1,74 @@
 @tool
-extends Area2D
+extends GridContainer
 class_name LevelBoundaries
 
-@export var shrink_inner: float = 10.0 :
-	set(new_value):
-		shrink_inner = new_value
-@export var grow_outer: float = 10.0:
-	set(new_value):
-		grow_outer = new_value
-@export var update_now: bool = false:
-	set(new_value):
-		update_boundaries()
+@export_file("boundary_block.tscn") var block_path: String
+@export var add_boundary: bool = false :
+	set(pressed):
+		if not pressed:
+			return
 
-@export var rect_ref: Control
+		_add_block.call_deferred()
 
+var visible_block_count: int = 0
 
-func _ready() -> void:
-	update_boundaries.call_deferred()
+@onready var block_scene: Resource = load(block_path)
 
 
-func update_boundaries(rect: Rect2 = Rect2()) -> void:
-	if not rect:
-		rect = _get_rect()
-
-	var points: PackedVector2Array = _get_corners(rect.grow(-shrink_inner))
-	var outer_corner := _get_corners(rect.grow(grow_outer))
-	outer_corner.reverse()
-	points.append_array(outer_corner)
-	points.append(points[0])
-	update_polygon.bind(points).call_deferred()
+func refresh() -> void:
+	pass
 
 
-func update_polygon(points: PackedVector2Array) -> void:
-	$CollisionPolygon2D.polygon = PackedVector2Array(points)
+func _update_blocks() -> void:
+	columns = 2 if visible_block_count > 1 else 1
+	for child in get_children():
+		if child is BoundaryBlock:
+			child.request_refresh()
 
 
-func _get_rect() -> Rect2:
-	if rect_ref:
-		return Rect2(rect_ref.position, rect_ref.size)
-
-	var parent := get_parent()
-	if parent is Control:
-		return Rect2(parent.position, parent.size)
-
-	return get_viewport_rect()
+func _add_block() -> void:
+	add_child(block_scene.instantiate())
+	queue_redraw()
 
 
-func _get_corners(rect: Rect2) -> PackedVector2Array:
-	return [
-		rect.position,
-		rect.position + Vector2(rect.size.x, 0.0),
-		rect.end,
-		rect.position + Vector2(0.0, rect.size.y),
-		rect.position,
-	]
+func _on_boundary_visibility_changed() -> void:
+	visible_block_count = 0
+	for child in get_children():
+		if child.visible:
+			visible_block_count += 1
+	_update_blocks()
+
+
+func _on_child_entered_tree(node: Node):
+	if not node is BoundaryBlock:
+		return
+
+	var boundary: BoundaryBlock = node
+	visible_block_count += 1
+	boundary.visibility_changed.connect(_on_boundary_visibility_changed)
+	_update_blocks()
+
+
+func _on_child_exiting_tree(node):
+	if not node is BoundaryBlock:
+		return
+
+	var boundary: BoundaryBlock = node
+	visible_block_count -= 1
+	boundary.visibility_changed.disconnect(_on_boundary_visibility_changed)
+	_update_blocks()
+
+
+func _on_control_parser_mouse_moved(mouse_position, relative):
+	for child: BoundaryBlock in get_children():
+		child.from_position(mouse_position)
+
+
+func _on_control_parser_wheel_down_pressed(ctrl, alt, shift):
+	for child: BoundaryBlock in get_children():
+		child.adjust_angle(-0.000001)
+
+
+func _on_control_parser_wheel_up_pressed(ctrl, alt, shift):
+	for child: BoundaryBlock in get_children():
+		child.adjust_angle(0.000001)
