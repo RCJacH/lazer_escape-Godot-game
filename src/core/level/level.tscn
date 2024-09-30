@@ -5,13 +5,7 @@
 [ext_resource type="Script" path="res://src/core/level/control_parser.gd" id="2_dnff1"]
 [ext_resource type="PackedScene" uid="uid://bfc3s2ded536f" path="res://src/core/level/level_boundaries/boundary_block.tscn" id="6_ssthp"]
 
-[node name="Level" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Level" type="Node2D"]
 script = ExtResource("1_ybe1b")
 metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
@@ -35,6 +29,7 @@ metadata/_edit_lock_ = true
 
 [node name="LevelBoundaries" parent="CanvasLayer/Viewport/ControlParser" instance=ExtResource("2_bot5h")]
 layout_mode = 1
+add_boundary = false
 
 [node name="BoundaryBlock" parent="CanvasLayer/Viewport/ControlParser/LevelBoundaries" instance=ExtResource("6_ssthp")]
 layout_mode = 2
