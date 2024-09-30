@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://naj2gkimrq2a" path="res://src/obstacles/generators/boundary/boundary.tscn" id="1_ibed3"]
 [ext_resource type="Script" path="res://src/core/level/level_boundaries/boundary_block.gd" id="1_otakd"]
-[ext_resource type="Script" path="res://src/core/level/level_ui/info/angle_label.gd" id="2_cgf1x"]
+[ext_resource type="Script" path="res://src/core/level/level_boundaries/angle_label.gd" id="2_cgf1x"]
 [ext_resource type="PackedScene" uid="uid://cwggn3r25h120" path="res://src/core/lazer/lazer.tscn" id="3_x2wro"]
 
 [node name="BoundaryBlock" type="Control"]
