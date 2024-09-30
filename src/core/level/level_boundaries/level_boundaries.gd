@@ -32,8 +32,10 @@ func _update_blocks() -> void:
 
 
 func _add_block() -> void:
-	add_child(block_scene.instantiate())
-	queue_redraw()
+	var block: BoundaryBlock = block_scene.instantiate()
+	add_child(block)
+	block.owner = get_tree().edited_scene_root
+	block.name = "BoundaryBlock%d" % get_child_count()
 
 
 func _on_boundary_visibility_changed() -> void:
