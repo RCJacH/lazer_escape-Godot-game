@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://brjygsbomddjk"]
+[gd_scene load_steps=6 format=3 uid="uid://brjygsbomddjk"]
 
 [ext_resource type="Script" path="res://src/core/level/level.gd" id="1_ybe1b"]
 [ext_resource type="PackedScene" uid="uid://12i7ql5u7day" path="res://src/core/level/level_boundaries/level_boundaries.tscn" id="2_bot5h"]
 [ext_resource type="Script" path="res://src/core/level/control_parser.gd" id="2_dnff1"]
+[ext_resource type="PackedScene" uid="uid://c55812kyqp767" path="res://src/core/level/level_ui/level_ui.tscn" id="5_qdvy7"]
 [ext_resource type="PackedScene" uid="uid://bfc3s2ded536f" path="res://src/core/level/level_boundaries/boundary_block.tscn" id="6_ssthp"]
 
 [node name="Level" type="Node2D"]
@@ -37,6 +38,8 @@ layout_mode = 2
 [node name="ControlPanel" type="Panel" parent="CanvasLayer/Viewport"]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
+
+[node name="LevelUI" parent="." instance=ExtResource("5_qdvy7")]
 
 [connection signal="gui_input" from="CanvasLayer/Viewport/ControlParser" to="CanvasLayer/Viewport/ControlParser" method="_on_gui_input"]
 [connection signal="mouse_moved" from="CanvasLayer/Viewport/ControlParser" to="CanvasLayer/Viewport/ControlParser/LevelBoundaries" method="_on_control_parser_mouse_moved"]

@@ -1,0 +1,80 @@
+[gd_scene load_steps=2 format=3 uid="uid://c55812kyqp767"]
+
+[ext_resource type="Script" path="res://src/core/level/level_ui/level_ui.gd" id="1_be860"]
+
+[node name="LevelUI" type="CanvasLayer"]
+script = ExtResource("1_be860")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0, 0, 0, 0.501961)
+metadata/_edit_lock_ = true
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="WinScreen" type="Panel" parent="CenterContainer"]
+layout_mode = 2
+metadata/_edit_lock_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/WinScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/WinScreen/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/WinScreen/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "YOU WIN"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/WinScreen/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/WinScreen/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Menu" type="CenterContainer" parent="CenterContainer/WinScreen/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MenuButton" type="Button" parent="CenterContainer/WinScreen/MarginContainer/VBoxContainer/HBoxContainer/Menu"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Menu"
+
+[node name="NextLevel" type="CenterContainer" parent="CenterContainer/WinScreen/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NextButton" type="Button" parent="CenterContainer/WinScreen/MarginContainer/VBoxContainer/HBoxContainer/NextLevel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Next"
+
+[connection signal="pressed" from="CenterContainer/WinScreen/MarginContainer/VBoxContainer/HBoxContainer/Menu/MenuButton" to="." method="_on_menu_button_pressed"]
+[connection signal="pressed" from="CenterContainer/WinScreen/MarginContainer/VBoxContainer/HBoxContainer/NextLevel/NextButton" to="." method="_on_next_button_pressed"]
