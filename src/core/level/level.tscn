@@ -40,8 +40,10 @@ custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 
 [node name="LevelUI" parent="." instance=ExtResource("5_qdvy7")]
+visible = false
 
 [connection signal="gui_input" from="CanvasLayer/Viewport/ControlParser" to="CanvasLayer/Viewport/ControlParser" method="_on_gui_input"]
 [connection signal="mouse_moved" from="CanvasLayer/Viewport/ControlParser" to="CanvasLayer/Viewport/ControlParser/LevelBoundaries" method="_on_control_parser_mouse_moved"]
 [connection signal="wheel_down_pressed" from="CanvasLayer/Viewport/ControlParser" to="CanvasLayer/Viewport/ControlParser/LevelBoundaries" method="_on_control_parser_wheel_down_pressed"]
 [connection signal="wheel_up_pressed" from="CanvasLayer/Viewport/ControlParser" to="CanvasLayer/Viewport/ControlParser/LevelBoundaries" method="_on_control_parser_wheel_up_pressed"]
+[connection signal="all_unlocked" from="CanvasLayer/Viewport/ControlParser/LevelBoundaries" to="LevelUI" method="display_win_screen"]
