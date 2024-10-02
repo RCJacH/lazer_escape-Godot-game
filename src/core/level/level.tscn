@@ -47,3 +47,5 @@ visible = false
 [connection signal="wheel_down_pressed" from="CanvasLayer/Viewport/ControlParser" to="CanvasLayer/Viewport/ControlParser/LevelBoundaries" method="_on_control_parser_wheel_down_pressed"]
 [connection signal="wheel_up_pressed" from="CanvasLayer/Viewport/ControlParser" to="CanvasLayer/Viewport/ControlParser/LevelBoundaries" method="_on_control_parser_wheel_up_pressed"]
 [connection signal="all_unlocked" from="CanvasLayer/Viewport/ControlParser/LevelBoundaries" to="LevelUI" method="display_win_screen"]
+[connection signal="next_level" from="LevelUI" to="." method="_on_level_ui_next_level"]
+[connection signal="return_to_menu" from="LevelUI" to="." method="_on_level_ui_return_to_menu"]
