@@ -1,0 +1,69 @@
+[gd_scene load_steps=11 format=3 uid="uid://cxoccab78tayp"]
+
+[ext_resource type="PackedScene" uid="uid://brjygsbomddjk" path="res://src/core/level/level.tscn" id="1_p32iu"]
+[ext_resource type="PackedScene" uid="uid://cq2obtl22c6x0" path="res://src/obstacles/powerups/powerup.tscn" id="2_cljto"]
+[ext_resource type="PackedScene" uid="uid://cgsx78wdmw5j5" path="res://src/obstacles/generators/cave/cave.tscn" id="2_hpw0t"]
+[ext_resource type="PackedScene" uid="uid://bnqcijapmmg00" path="res://src/obstacles/generators/rock/rock.tscn" id="3_bhja1"]
+[ext_resource type="Script" path="res://src/obstacles/powerups/powerup_action.gd" id="3_e8v2u"]
+[ext_resource type="Script" path="res://src/obstacles/generators/cave/opening.gd" id="4_mit00"]
+[ext_resource type="PackedScene" uid="uid://s7qiaci5q74j" path="res://src/obstacles/generators/barrier/barrier.tscn" id="4_x4sq3"]
+
+[sub_resource type="Resource" id="Resource_eyrap"]
+script = ExtResource("3_e8v2u")
+modifier = 1
+mod_target = 0
+
+[sub_resource type="Resource" id="Resource_3q8qu"]
+script = ExtResource("4_mit00")
+position = 0.49
+width = 0.05
+
+[sub_resource type="Resource" id="Resource_h4kak"]
+script = ExtResource("4_mit00")
+position = 0.185
+width = 0.0901
+
+[node name="Level" instance=ExtResource("1_p32iu")]
+
+[node name="PowerUp" parent="." index="0" instance=ExtResource("2_cljto")]
+position = Vector2(307, 266)
+action = SubResource("Resource_eyrap")
+
+[node name="Rock" parent="." index="1" instance=ExtResource("3_bhja1")]
+position = Vector2(349, 424)
+density = 8
+freeze = false
+bounceable = true
+
+[node name="Cave" parent="." index="2" instance=ExtResource("2_hpw0t")]
+position = Vector2(578, 324)
+thickness = 24.0
+openings = Array[ExtResource("4_mit00")]([SubResource("Resource_3q8qu")])
+freeze = false
+bounceable = true
+
+[node name="Cave2" parent="." index="3" instance=ExtResource("2_hpw0t")]
+position = Vector2(306, 263)
+radius = 64.0
+thickness = 16.0
+openings = Array[ExtResource("4_mit00")]([SubResource("Resource_h4kak")])
+density = 9
+jaggedness = 0.537
+freeze = false
+bounceable = true
+
+[node name="Barrier" parent="." index="4" instance=ExtResource("4_x4sq3")]
+freeze = false
+bounceable = true
+metadata/_edit_lock_ = true
+
+[node name="Line2D" type="Line2D" parent="Barrier" index="1"]
+points = PackedVector2Array(128, 198, 135, 417, 326, 556, 673, 572, 859, 429)
+
+[node name="BoundaryBlock" parent="CanvasLayer/LevelBoundaries" index="0"]
+lazer_bounce_count = 1
+
+[node name="LevelDesignHelper" parent="." index="7"]
+position = Vector2(557, 439)
+
+[connection signal="tree_entered" from="CanvasLayer/LevelBoundaries/BoundaryBlock" to="CanvasLayer/LevelBoundaries/BoundaryBlock/Boundary" method="refresh"]
