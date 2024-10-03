@@ -6,7 +6,7 @@ class_name ObstacleGenerator
 	set(new_density):
 		density = new_density
 		_refresh_deferred()
-@export_range(0.0, 1.0) var jaggedness: float = 0.1 :
+@export_range(0.0, 1.0) var jaggedness: float = 0.0 :
 	set(new_jaggedness):
 		jaggedness = new_jaggedness
 		_jagged_range = Vector2(-0.5, 0.5) * jaggedness

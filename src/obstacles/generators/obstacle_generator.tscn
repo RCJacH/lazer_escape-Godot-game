@@ -6,7 +6,7 @@
 [node name="ObstacleGenerator" instance=ExtResource("1_c80ko")]
 script = ExtResource("2_303g2")
 density = 36
-jaggedness = 0.1
+jaggedness = 0.0
 do_not_connect = false
 freeze = true
 random_seed = 1
