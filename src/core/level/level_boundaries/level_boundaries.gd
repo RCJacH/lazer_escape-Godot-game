@@ -23,6 +23,16 @@ var boundaries: Dictionary = {}
 @onready var block_scene: Resource = load(block_path)
 
 
+func _ready() -> void:
+	for child in get_children():
+		if child is not BoundaryBlock:
+			continue
+		var block: BoundaryBlock = child
+		block.visibility_changed.connect(_on_boundary_visibility_changed)
+		block.locked.connect(_on_boundary_locked.bind(block))
+		block.unlocked.connect(_on_boundary_unlocked.bind(block))
+
+
 func refresh() -> void:
 	pass
 
