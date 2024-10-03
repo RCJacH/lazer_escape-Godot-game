@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://cw5y2j5yjjc0p"]
+
+[ext_resource type="Script" path="res://src/powerups/powerup.gd" id="1_mik6d"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_phme1"]
+radius = 32.0
+
+[sub_resource type="Gradient" id="Gradient_erk8w"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.668852, 0.688525)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_0mtn1"]
+gradient = SubResource("Gradient_erk8w")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[node name="Powerup" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_mik6d")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_phme1")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("GradientTexture2D_0mtn1")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
