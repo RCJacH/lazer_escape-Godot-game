@@ -123,6 +123,11 @@ func _build_polygon_shape(
 	return points
 
 
+func _in_game_post_ready_actions() -> void:
+	for line in lines:
+		line.visible = false
+
+
 func _on_line_redraw(line: Line2D) -> void:
 	_polygons_pending_refresh.append(lines[line])
 	_refresh_deferred()
