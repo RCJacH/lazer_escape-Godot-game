@@ -67,7 +67,7 @@ func _ready() -> void:
 	if freeze:
 		_copy_existing_polygon_to_collisions()
 	else:
-		refresh()
+		_refresh_deferred()
 	_in_game_post_ready_actions()
 
 

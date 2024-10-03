@@ -16,12 +16,15 @@ class_name ObstacleGeneartorBoundary
 		_refresh_deferred()
 
 
-func _ready() -> void:
+func _in_game_post_ready_actions() -> void:
 	_polygon_count = 1
 	_refresh_deferred()
 
 
 func refresh() -> void:
+	if not _pending_refresh:
+		return
+
 	_polygon_count = 1
 	var rect := _get_rect()
 

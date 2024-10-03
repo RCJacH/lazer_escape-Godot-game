@@ -18,6 +18,9 @@ func refresh() -> void:
 
 
 func _refresh_polygon(polygon: Polygon) -> void:
+	if not _pending_refresh:
+		return
+
 	var line: Line2D = polygon.ref_node
 	var inners: Array[Vector2]
 	var outers: Array[Vector2]
