@@ -61,10 +61,14 @@ var _jagged_range := Vector2.ZERO
 
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
+
 	if freeze:
 		_copy_existing_polygon_to_collisions()
-	if not Engine.is_editor_hint():
-		_in_game_post_ready_actions()
+	else:
+		refresh()
+	_in_game_post_ready_actions()
 
 
 func refresh() -> void:
