@@ -32,3 +32,9 @@ func do(lazer: Lazer) -> void:
 			lazer.bounces += modifier
 		Target.POWER:
 			pass
+
+
+func mod_as_text() -> String:
+	if modifier > 0:
+		return "+%d" % modifier
+	return "%s" % modifier
