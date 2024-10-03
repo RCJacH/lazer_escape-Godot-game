@@ -17,6 +17,7 @@ var _polygon_count: int = 0 :
 
 
 func on_lazer_hit(
+	lazer: Lazer,
 	bounce_remaining: int,
 	collision_result: Collision,
 	previous_positions: Array[Vector2],
@@ -38,6 +39,7 @@ func on_lazer_hit(
 		new_result = new_result.back_trace()
 
 	return new_result.collider.on_lazer_hit(
+		lazer,
 		bounce_remaining - 1,
 		new_result,
 		previous_positions,

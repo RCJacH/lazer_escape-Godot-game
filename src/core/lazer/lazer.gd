@@ -42,6 +42,7 @@ func update() -> void:
 
 	if collision_result.collider:
 		previous_positions = collision_result.collider.on_lazer_hit(
+			self,
 			bounces,
 			collision_result,
 			previous_positions
