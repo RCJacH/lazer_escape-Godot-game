@@ -26,6 +26,9 @@ class_name ObstacleGenerator
 		_refresh_deferred()
 @export var randomize_seed: bool = false :
 	set(new_value):
+		if not new_value:
+			return
+
 		random_seed = randi()
 @export var call_refresh: bool = false :
 	set(new_value):
