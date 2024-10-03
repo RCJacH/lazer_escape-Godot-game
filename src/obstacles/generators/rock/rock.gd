@@ -16,7 +16,7 @@ class_name ObstacleGeneratorRock
 func refresh() -> void:
 	var jagged_range := jaggedness - jaggedness * 0.5
 	var points: PackedVector2Array = []
-	for deg in range(0, 360, density):
+	for deg in range(0, 360, 360.0 / density):
 		var direction := Vector2.from_angle(deg_to_rad(deg + density * jagged_range * randomizer.randf()))
 		var point := direction * (radius + radius * jagged_range * randomizer.randf())
 		points.append(point)
