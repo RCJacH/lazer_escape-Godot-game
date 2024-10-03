@@ -53,6 +53,9 @@ func _on_boundary_locked(boundary: BoundaryBlock) -> void:
 func _on_boundary_unlocked(boundary: BoundaryBlock) -> void:
 	boundaries[boundary] = true
 	if boundaries.values().all(func(x): return x == true):
+		if Engine.is_editor_hint():
+			return
+
 		all_unlocked.emit()
 
 
