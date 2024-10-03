@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://brjygsbomddjk"]
+[gd_scene load_steps=8 format=3 uid="uid://brjygsbomddjk"]
 
 [ext_resource type="Script" path="res://src/core/level/level.gd" id="1_ybe1b"]
 [ext_resource type="PackedScene" uid="uid://12i7ql5u7day" path="res://src/core/level/level_boundaries/level_boundaries.tscn" id="2_bot5h"]
 [ext_resource type="Script" path="res://src/core/level/control_parser.gd" id="2_dnff1"]
 [ext_resource type="PackedScene" uid="uid://c55812kyqp767" path="res://src/core/level/level_ui/level_ui.tscn" id="5_qdvy7"]
+[ext_resource type="Script" path="res://src/core/level/level_boundaries/boundary_block.gd" id="5_uf54a"]
 [ext_resource type="Script" path="res://src/core/level/level_design_helper.gd" id="6_2gpuc"]
 [ext_resource type="PackedScene" uid="uid://bfc3s2ded536f" path="res://src/core/level/level_boundaries/boundary_block.tscn" id="6_ssthp"]
 
@@ -14,32 +15,32 @@ metadata/_edit_lock_ = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Viewport" type="VBoxContainer" parent="CanvasLayer"]
+[node name="LevelBoundaries" parent="CanvasLayer" instance=ExtResource("2_bot5h")]
+metadata/_edit_lock_ = true
+
+[node name="BoundaryBlock" type="Control" parent="CanvasLayer/LevelBoundaries" instance=ExtResource("6_ssthp")]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("5_uf54a")
+lazer_position = Vector2(0.5, 0.5)
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="ControlParser" type="Control" parent="CanvasLayer"]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-metadata/_edit_lock_ = true
-
-[node name="ControlParser" type="Control" parent="CanvasLayer/Viewport"]
-layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("2_dnff1")
 metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
-
-[node name="LevelBoundaries" parent="CanvasLayer/Viewport/ControlParser" instance=ExtResource("2_bot5h")]
-layout_mode = 1
-add_boundary = false
-metadata/_edit_lock_ = true
-
-[node name="BoundaryBlock" parent="CanvasLayer/Viewport/ControlParser/LevelBoundaries" instance=ExtResource("6_ssthp")]
-layout_mode = 2
-
-[node name="ControlPanel" type="Panel" parent="CanvasLayer/Viewport"]
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 2
 
 [node name="LevelUI" parent="." instance=ExtResource("5_qdvy7")]
 visible = false
@@ -47,11 +48,11 @@ visible = false
 [node name="LevelDesignHelper" type="Node2D" parent="."]
 script = ExtResource("6_2gpuc")
 
-[connection signal="gui_input" from="CanvasLayer/Viewport/ControlParser" to="CanvasLayer/Viewport/ControlParser" method="_on_gui_input"]
-[connection signal="mouse_moved" from="CanvasLayer/Viewport/ControlParser" to="CanvasLayer/Viewport/ControlParser/LevelBoundaries" method="_on_control_parser_mouse_moved"]
-[connection signal="wheel_down_pressed" from="CanvasLayer/Viewport/ControlParser" to="CanvasLayer/Viewport/ControlParser/LevelBoundaries" method="_on_control_parser_wheel_down_pressed"]
-[connection signal="wheel_up_pressed" from="CanvasLayer/Viewport/ControlParser" to="CanvasLayer/Viewport/ControlParser/LevelBoundaries" method="_on_control_parser_wheel_up_pressed"]
-[connection signal="all_unlocked" from="CanvasLayer/Viewport/ControlParser/LevelBoundaries" to="LevelUI" method="display_win_screen"]
+[connection signal="all_unlocked" from="CanvasLayer/LevelBoundaries" to="LevelUI" method="display_win_screen"]
+[connection signal="gui_input" from="CanvasLayer/ControlParser" to="CanvasLayer/ControlParser" method="_on_gui_input"]
+[connection signal="mouse_moved" from="CanvasLayer/ControlParser" to="CanvasLayer/LevelBoundaries" method="_on_control_parser_mouse_moved"]
+[connection signal="wheel_down_pressed" from="CanvasLayer/ControlParser" to="CanvasLayer/LevelBoundaries" method="_on_control_parser_wheel_down_pressed"]
+[connection signal="wheel_up_pressed" from="CanvasLayer/ControlParser" to="CanvasLayer/LevelBoundaries" method="_on_control_parser_wheel_up_pressed"]
 [connection signal="next_level" from="LevelUI" to="." method="_on_level_ui_next_level"]
 [connection signal="return_to_menu" from="LevelUI" to="." method="_on_level_ui_return_to_menu"]
-[connection signal="position_changed" from="LevelDesignHelper" to="CanvasLayer/Viewport/ControlParser/LevelBoundaries" method="_on_control_parser_mouse_moved"]
+[connection signal="position_changed" from="LevelDesignHelper" to="CanvasLayer/LevelBoundaries" method="_on_control_parser_mouse_moved"]

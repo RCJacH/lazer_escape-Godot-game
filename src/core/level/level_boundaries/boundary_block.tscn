@@ -62,8 +62,6 @@ metadata/_edit_lock_ = true
 unique_name_in_owner = true
 one_shot = true
 
-[connection signal="resized" from="." to="." method="request_refresh"]
-[connection signal="tree_entered" from="." to="Boundary" method="refresh"]
 [connection signal="hit_by_lazer" from="Boundary" to="." method="_on_boundary_hit_by_lazer"]
 [connection signal="angle_changed" from="Lazer" to="MarginContainer/VBoxContainer/AngleLabel" method="_on_lazer_angle_changed"]
 [connection signal="casting_finished" from="Lazer" to="." method="_on_lazer_casting_finished"]

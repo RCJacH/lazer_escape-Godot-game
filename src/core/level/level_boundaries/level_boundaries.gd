@@ -11,8 +11,13 @@ signal all_unlocked()
 			return
 
 		_add_block.call_deferred()
+@export var remove_last: bool = false :
+	set(pressed):
+		if not pressed:
+			return
 
-var visible_block_count: int = 0
+		_remove_block.call_deferred()
+
 var boundaries: Dictionary = {}
 
 @onready var block_scene: Resource = load(block_path)
@@ -23,6 +28,10 @@ func refresh() -> void:
 
 
 func _update_blocks() -> void:
+	var visible_block_count := 0
+	for child in get_children():
+		if child.visible:
+			visible_block_count += 1
 	columns = 2 if visible_block_count > 1 else 1
 	boundaries.clear()
 	for child in get_children():
@@ -34,15 +43,27 @@ func _update_blocks() -> void:
 func _add_block() -> void:
 	var block: BoundaryBlock = block_scene.instantiate()
 	add_child(block)
+
+	block.visibility_changed.connect(_on_boundary_visibility_changed)
+	block.locked.connect(_on_boundary_locked.bind(block))
+	block.unlocked.connect(_on_boundary_unlocked.bind(block))
+	_update_blocks()
+
 	block.owner = get_tree().edited_scene_root
 	block.name = "BoundaryBlock%d" % get_child_count()
 
 
+func _remove_block() -> void:
+	if get_child_count() < 1:
+		return
+
+	var block: BoundaryBlock = get_child(-1)
+	remove_child(block)
+	block.queue_free()
+	_update_blocks()
+
+
 func _on_boundary_visibility_changed() -> void:
-	visible_block_count = 0
-	for child in get_children():
-		if child.visible:
-			visible_block_count += 1
 	_update_blocks()
 
 
@@ -59,27 +80,7 @@ func _on_boundary_unlocked(boundary: BoundaryBlock) -> void:
 		all_unlocked.emit()
 
 
-func _on_child_entered_tree(node: Node):
-	if not node is BoundaryBlock:
-		return
-
-	var boundary: BoundaryBlock = node
-	visible_block_count += 1
-	boundary.visibility_changed.connect(_on_boundary_visibility_changed)
-	boundary.locked.connect(_on_boundary_locked.bind(boundary))
-	boundary.unlocked.connect(_on_boundary_unlocked.bind(boundary))
-	_update_blocks()
-
-
-func _on_child_exiting_tree(node):
-	if not node is BoundaryBlock:
-		return
-
-	var boundary: BoundaryBlock = node
-	visible_block_count -= 1
-	boundary.visibility_changed.disconnect(_on_boundary_visibility_changed)
-	boundary.locked.disconnect(_on_boundary_locked)
-	boundary.unlocked.disconnect(_on_boundary_unlocked)
+func _on_child_order_changed():
 	_update_blocks()
 
 
