@@ -12,3 +12,5 @@ freeze = true
 random_seed = 1
 randomize_seed = false
 call_refresh = false
+
+[connection signal="draw" from="Display" to="." method="_on_display_draw"]

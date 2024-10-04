@@ -56,6 +56,7 @@ enum Density {
 	SUPERHIGH = 72,
 }
 
+var _is_manual_editing: bool = true
 var _pending_refresh: bool = false
 var _jagged_range := Vector2.ZERO
 
@@ -85,6 +86,7 @@ func _refresh_deferred() -> void:
 		return
 
 	_pending_refresh = true
+	_is_manual_editing = false
 	refresh.call_deferred()
 
 
@@ -123,3 +125,12 @@ func _update_single_polygon() -> void:
 
 func _randf() -> float:
 	return randomizer.randf_range(_jagged_range.x, _jagged_range.y)
+
+
+func _on_display_draw():
+	if not Engine.is_editor_hint():
+		return
+
+	if _is_manual_editing:
+		_copy_existing_polygon_to_collisions()
+	_is_manual_editing = true
