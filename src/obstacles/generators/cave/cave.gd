@@ -25,6 +25,9 @@ class_name ObstacleGeneratorCave
 
 
 func _refresh() -> void:
+	for p in polygons:
+		p.clear()
+
 	var all_points: PackedVector2Array = []
 	var inner_points: Array[Vector2] = []
 	var outer_points: Array[Vector2] = []
@@ -44,32 +47,33 @@ func _refresh() -> void:
 		if deg >= 360:
 			shifted_deg -= 360.0
 		var d_deg := step_deg * _randf()
+		var next_deg := shifted_deg + d_deg
 		if current_opening:
 			if closing_deg:
-				if shifted_deg + d_deg > closing_deg:
+				if next_deg > closing_deg:
 					d_deg = current_opening.y - shifted_deg
 					closing_deg = 0.0
-					current_opening = _get_next_opening(sorted_openings)
+					current_opening = _get_next_opening(sorted_openings) + Vector2.ONE * starting_deg
 				else:
 					continue
-			elif not previous_deg or (previous_deg < current_opening.x and shifted_deg + d_deg > current_opening.x):
+			elif not previous_deg or (previous_deg < current_opening.x and next_deg > current_opening.x):
 				d_deg = current_opening.x - shifted_deg
 				closing_deg = current_opening.y
 				if not previous_deg:
 					continue
 				if inner_points and outer_points:
-					_add_points(shifted_deg + d_deg, inner_points, outer_points)
+					_add_points(next_deg, inner_points, outer_points)
 					points = _build_polygon_shape(inner_points, outer_points)
 					all_points.append_array(points)
 					_update_polygon(i, start_index, points.size())
 					i += 1
 					start_index = all_points.size()
-					previous_deg = shifted_deg + d_deg
+					previous_deg = next_deg
 					inner_points.clear()
 					outer_points.clear()
 					continue
-		_add_points(shifted_deg + d_deg, inner_points, outer_points)
-		previous_deg = shifted_deg + d_deg
+		_add_points(next_deg, inner_points, outer_points)
+		previous_deg = next_deg
 
 	var count := polygons.size()
 	if count == 0:
