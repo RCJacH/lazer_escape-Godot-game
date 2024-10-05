@@ -17,26 +17,26 @@ class_name ObstacleGeneratorCave
 		if new_openings.size() > openings.size():
 			to_refresh = false
 		openings = new_openings
-		_polygon_count = openings.size()
+		_resize_polygon(openings.size())
 		if openings:
 			_connect_new_opening(openings.back())
 		if to_refresh:
 			_refresh_deferred()
 
 
-func refresh() -> void:
-	if not _pending_refresh:
-		return
-
-	var inner_points: PackedVector2Array = []
-	var outer_points: PackedVector2Array = []
+func _refresh() -> void:
+	var all_points: PackedVector2Array = []
+	var inner_points: Array[Vector2] = []
+	var outer_points: Array[Vector2] = []
 	var sorted_openings := Opening.as_vectors(openings)
 	var i := 0
+	var start_index := 0
 	var closing_deg := 0.0
 	var current_opening: Vector2 = _get_next_opening(sorted_openings)
 	var starting_deg: float = current_opening.x if current_opening else 0.0
 	var previous_deg := 0.0
 	var step_deg := 360.0 / density
+	var points: PackedVector2Array
 
 	for n in range(density + 1):
 		var deg := n * step_deg
@@ -59,24 +59,28 @@ func refresh() -> void:
 					continue
 				if inner_points and outer_points:
 					_add_points(shifted_deg + d_deg, inner_points, outer_points)
-					polygons[i].points = _build_polygon_shape(inner_points, outer_points)
+					points = _build_polygon_shape(inner_points, outer_points)
+					all_points.append_array(points)
+					_update_polygon(i, start_index, points.size())
 					i += 1
+					start_index = all_points.size()
 					previous_deg = shifted_deg + d_deg
+					inner_points.clear()
+					outer_points.clear()
 					continue
-
 		_add_points(shifted_deg + d_deg, inner_points, outer_points)
 		previous_deg = shifted_deg + d_deg
 
-	if i < polygons.size():
-		polygons[i].points = _build_polygon_shape(inner_points, outer_points)
-		i += 1
+	var count := polygons.size()
+	if count == 0:
+		count = 1
 
-	while i < polygons.size():
-		polygons[i].points.clear()
-		i += 1
-
-	_update_data()
-	_pending_refresh = false
+	if i < count:
+		points = _build_polygon_shape(inner_points, outer_points)
+		all_points.append_array(points)
+		if polygons:
+			_update_polygon(i, start_index, points.size())
+	polygon = all_points
 
 
 func _connect_new_opening(new_opening: Opening) -> void:
@@ -96,7 +100,7 @@ func _get_next_opening(sorted_openings: Array[Vector2]) -> Vector2:
 	return sorted_openings.pop_front() * 360.0
 
 
-func _add_points(deg: float, inner_points: PackedVector2Array, outer_points: PackedVector2Array) -> void:
+func _add_points(deg: float, inner_points: Array[Vector2], outer_points: Array[Vector2]) -> void:
 	var direction := Vector2.from_angle(deg_to_rad(deg))
 	var inner := direction * (radius + thickness * _randf())
 	var outer := direction * (radius + thickness + thickness * _randf())
@@ -112,7 +116,6 @@ func _build_polygon_shape(
 	points.append_array(inner_points)
 	outer_points.reverse()
 	points.append_array(outer_points)
-	# points.append(points[0])
 	inner_points.clear()
 	outer_points.clear()
 	return points
