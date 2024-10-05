@@ -11,10 +11,6 @@ class_name ObstacleGenerator
 		jaggedness = new_jaggedness
 		_jagged_range = Vector2(-0.5, 0.5) * jaggedness
 		_refresh_deferred()
-@export var do_not_connect: bool = false :
-	set(new_value):
-		do_not_connect = new_value
-		_refresh_deferred()
 @export var freeze: bool = true:
 	set(new_freeze):
 		freeze = new_freeze
@@ -56,7 +52,6 @@ enum Density {
 	SUPERHIGH = 72,
 }
 
-var _is_manual_editing: bool = true
 var _pending_refresh: bool = false
 var _jagged_range := Vector2.ZERO
 
@@ -74,6 +69,15 @@ func _ready() -> void:
 
 
 func refresh() -> void:
+	if not _pending_refresh:
+		return
+
+	_refresh()
+	_copy_existing_polygon_to_collisions()
+	_pending_refresh = false
+
+
+func _refresh() -> void:
 	pass
 
 
@@ -90,47 +94,24 @@ func _refresh_deferred() -> void:
 	refresh.call_deferred()
 
 
-func _update_data() -> void:
-	if polygons.size() > 1:
-		return _update_multiple_polygons()
-
-	_update_single_polygon()
-
-
-func _update_multiple_polygons() -> void:
-	$Display.polygons = []
-	$Display.polygons.resize(polygons.size())
-	var points: PackedVector2Array = []
-	for i in range(polygons.size()):
-		var polygon: Polygon = polygons[i]
-		var count := points.size()
-		points.append_array(polygon.points)
-		polygon.collision.polygon = PackedVector2Array(polygon.points)
-		$Display.polygons[i] = PackedInt32Array(polygon.index_array(count))
-	$Display.polygon = PackedVector2Array(points)
+func _resize_polygon(target_size: int) -> void:
+	if target_size == 1:
+		target_size = 0
+	var diff := target_size - polygons.size()
+	polygons.resize(target_size)
+	if diff > 0:
+		for i in range(diff):
+			var x: Array[int] = []
+			polygons[i] = x
 
 
-func _update_single_polygon() -> void:
-	if not polygons:
-		$Display.polygon = PackedVector2Array()
-		$Display.polygons.clear()
-		return
-
-	var polygon: Polygon = polygons.front()
-	var packed_array := PackedVector2Array(polygon.points)
-	$Display.polygon = packed_array
-	$Display.polygons.clear()
-	polygon.collision.polygon = packed_array
+func _update_polygon(polygon_index: int, start_index: int, count: int) -> void:
+	var p: Array[int] = polygons[polygon_index]
+	p.resize(count)
+	for i in range(count):
+		var n := i + start_index
+		p[i] = n
 
 
 func _randf() -> float:
 	return randomizer.randf_range(_jagged_range.x, _jagged_range.y)
-
-
-func _on_display_draw():
-	if not Engine.is_editor_hint():
-		return
-
-	if _is_manual_editing:
-		_copy_existing_polygon_to_collisions()
-	_is_manual_editing = true
