@@ -2,46 +2,44 @@
 extends ObstacleGenerator
 class_name ObstacleGeneratorBarrier
 
-var lines: Dictionary = {}
-
-var _polygons_pending_refresh: Array[Polygon] = []
+var lines: Array[Line2D] = []
 
 
-func refresh() -> void:
-	if _polygons_pending_refresh.is_empty():
-		_polygons_pending_refresh = polygons.duplicate()
-	for polygon in _polygons_pending_refresh:
-		_refresh_polygon(polygon)
-	_update_data()
-	_pending_refresh = false
-	_polygons_pending_refresh.clear()
+func _refresh() -> void:
+	var all_points: PackedVector2Array = []
+	var points: PackedVector2Array
+	var i := 0
+	var start_index := 0
+	for line in lines:
+		if not line.points:
+			continue
 
+		var inners: Array[Vector2]
+		var outers: Array[Vector2]
+		var previous_point: Vector2 = line.points[0]
+		var final_index := line.points.size() - 1
+		var previous_direction := Vector2.ZERO
+		for j in range(final_index):
+			var point: Vector2 = line.points[j + 1]
+			previous_direction = _get_outline_from_point_pairs(
+				previous_point,
+				point,
+				line.width,
+				previous_direction,
+				inners,
+				outers,
+				j == 0,
+				j==final_index - 1
+			)
+			previous_point = point
 
-func _refresh_polygon(polygon: Polygon) -> void:
-	if not _pending_refresh:
-		return
+		points = _build_polygon_shape(inners, outers)
+		all_points.append_array(points)
+		_update_polygon(i, start_index, points.size())
+		start_index = all_points.size()
+		i += 1
 
-	var line: Line2D = polygon.ref_node
-	var inners: Array[Vector2]
-	var outers: Array[Vector2]
-	var previous_point: Vector2 = line.points[0]
-	var final_index := line.points.size() - 1
-	var previous_direction := Vector2.ZERO
-	for i in range(final_index):
-		var point: Vector2 = line.points[i + 1]
-		previous_direction = _get_outline_from_point_pairs(
-			previous_point,
-			point,
-			line.width,
-			previous_direction,
-			inners,
-			outers,
-			i == 0,
-			i==final_index - 1
-		)
-		previous_point = point
-
-	polygon.points = _build_polygon_shape(inners, outers)
+	polygon = all_points
 
 
 func _get_outline_from_point_pairs(
@@ -113,47 +111,25 @@ func _merge_intersection(points: Array[Vector2], new_points: Array[Vector2], ang
 	points.append(midpoint + sign(angle) * perpendicular * distance * (1.0 + 0.5 * _randf()))
 
 
-func _build_polygon_shape(
-	inner_points: Array[Vector2],
-	outer_points: Array[Vector2],
-) -> PackedVector2Array:
-	var points: PackedVector2Array = []
-	points.append_array(inner_points)
-	outer_points.reverse()
-	points.append_array(outer_points)
-	inner_points.clear()
-	outer_points.clear()
-	return points
-
-
 func _in_game_post_ready_actions() -> void:
 	for line in lines:
 		line.visible = false
 
 
-func _on_line_redraw(line: Line2D) -> void:
-	_polygons_pending_refresh.append(lines[line])
+func _on_line_redraw() -> void:
 	_refresh_deferred()
 
 
-func _on_child_entered_tree(node: Node) -> void:
-	if not node is Line2D:
-		return
-
-	var line: Line2D = node
-	line.draw.connect(_on_line_redraw.bind(node))
-	var polygon := _add_polygon()
-	polygon.ref_node = line
-	lines[line] = polygon
-
-
-func _on_child_exiting_tree(node: Node) -> void:
-	if not node is Line2D:
-		return
-
-	var line: Line2D = node
-	if line.draw.is_connected(_on_line_redraw):
-		line.draw.disconnect(_on_line_redraw)
-	_remove_polygon(line)
-	lines.erase(line)
-	_refresh_deferred()
+func _on_child_order_changed():
+	var count: int = 0
+	lines.clear()
+	for child in get_children():
+		if child is not Line2D:
+			continue
+		var line: Line2D = child
+		count += 1
+		lines.append(line)
+		if line.draw.is_connected(_on_line_redraw):
+			continue
+		line.draw.connect(_on_line_redraw)
+	_resize_polygon(count)

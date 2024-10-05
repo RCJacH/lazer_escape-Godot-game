@@ -17,26 +17,29 @@ class_name ObstacleGeneratorCave
 		if new_openings.size() > openings.size():
 			to_refresh = false
 		openings = new_openings
-		_polygon_count = openings.size()
+		_resize_polygon(openings.size())
 		if openings:
 			_connect_new_opening(openings.back())
 		if to_refresh:
 			_refresh_deferred()
 
 
-func refresh() -> void:
-	if not _pending_refresh:
-		return
+func _refresh() -> void:
+	for p in polygons:
+		p.clear()
 
-	var inner_points: PackedVector2Array = []
-	var outer_points: PackedVector2Array = []
+	var all_points: PackedVector2Array = []
+	var inner_points: Array[Vector2] = []
+	var outer_points: Array[Vector2] = []
 	var sorted_openings := Opening.as_vectors(openings)
 	var i := 0
+	var start_index := 0
 	var closing_deg := 0.0
 	var current_opening: Vector2 = _get_next_opening(sorted_openings)
 	var starting_deg: float = current_opening.x if current_opening else 0.0
 	var previous_deg := 0.0
 	var step_deg := 360.0 / density
+	var points: PackedVector2Array
 
 	for n in range(density + 1):
 		var deg := n * step_deg
@@ -44,39 +47,49 @@ func refresh() -> void:
 		if deg >= 360:
 			shifted_deg -= 360.0
 		var d_deg := step_deg * _randf()
+		var next_deg := shifted_deg + d_deg
 		if current_opening:
 			if closing_deg:
-				if shifted_deg + d_deg > closing_deg:
+				if next_deg > closing_deg:
 					d_deg = current_opening.y - shifted_deg
 					closing_deg = 0.0
-					current_opening = _get_next_opening(sorted_openings)
+					current_opening = _get_next_opening(sorted_openings) + Vector2.ONE * starting_deg
 				else:
 					continue
-			elif not previous_deg or (previous_deg < current_opening.x and shifted_deg + d_deg > current_opening.x):
+			elif not previous_deg or (previous_deg < current_opening.x and next_deg > current_opening.x):
 				d_deg = current_opening.x - shifted_deg
 				closing_deg = current_opening.y
 				if not previous_deg:
 					continue
 				if inner_points and outer_points:
-					_add_points(shifted_deg + d_deg, inner_points, outer_points)
-					polygons[i].points = _build_polygon_shape(inner_points, outer_points)
+					_add_points(next_deg, inner_points, outer_points)
+					points = _build_polygon_shape(inner_points, outer_points)
+					all_points.append_array(points)
+					_update_polygon(i, start_index, points.size())
 					i += 1
-					previous_deg = shifted_deg + d_deg
+					start_index = all_points.size()
+					previous_deg = next_deg
+					inner_points.clear()
+					outer_points.clear()
 					continue
+		_add_points(next_deg, inner_points, outer_points)
+		previous_deg = next_deg
 
-		_add_points(shifted_deg + d_deg, inner_points, outer_points)
-		previous_deg = shifted_deg + d_deg
+	var count := polygons.size()
+	if count == 0:
+		count = 1
 
-	if i < polygons.size():
-		polygons[i].points = _build_polygon_shape(inner_points, outer_points)
-		i += 1
+	if i < count:
+		points = _build_polygon_shape(inner_points, outer_points)
+		all_points.append_array(points)
+		if polygons:
+			_update_polygon(i, start_index, points.size())
 
-	while i < polygons.size():
-		polygons[i].points.clear()
-		i += 1
-
-	_update_data()
-	_pending_refresh = false
+	var half := floori(all_points.size() * 0.5)
+	if not openings.size():
+		all_points[0] = all_points[half - 1]
+		all_points[-1] = all_points[half]
+	polygon = all_points
 
 
 func _connect_new_opening(new_opening: Opening) -> void:
@@ -96,23 +109,9 @@ func _get_next_opening(sorted_openings: Array[Vector2]) -> Vector2:
 	return sorted_openings.pop_front() * 360.0
 
 
-func _add_points(deg: float, inner_points: PackedVector2Array, outer_points: PackedVector2Array) -> void:
+func _add_points(deg: float, inner_points: Array[Vector2], outer_points: Array[Vector2]) -> void:
 	var direction := Vector2.from_angle(deg_to_rad(deg))
 	var inner := direction * (radius + thickness * _randf())
 	var outer := direction * (radius + thickness + thickness * _randf())
 	inner_points.append(inner)
 	outer_points.append(outer)
-
-
-func _build_polygon_shape(
-	inner_points: PackedVector2Array,
-	outer_points: PackedVector2Array,
-) -> PackedVector2Array:
-	var points: PackedVector2Array = []
-	points.append_array(inner_points)
-	outer_points.reverse()
-	points.append_array(outer_points)
-	# points.append(points[0])
-	inner_points.clear()
-	outer_points.clear()
-	return points

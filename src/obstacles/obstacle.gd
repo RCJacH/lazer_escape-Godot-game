@@ -1,5 +1,5 @@
 @tool
-extends StaticBody2D
+extends Polygon2D
 class_name Obstacle
 
 signal hit_by_lazer()
@@ -7,13 +7,11 @@ signal hit_by_lazer()
 @export var bounceable: bool = false
 @export var health: float = 0.0
 
-var polygons: Array[Polygon] = []
 var randomizer := RandomNumberGenerator.new()
 
-var _polygon_count: int = 0 :
-	set(new_polygon_count):
-		_polygon_count = new_polygon_count
-		_update_polygons(_polygon_count)
+var _is_manual_editing: bool = true
+
+@onready var collision_host: CollisionObject2D = $CollisionHost
 
 
 func on_lazer_hit(
@@ -46,61 +44,52 @@ func on_lazer_hit(
 	)
 
 
-func _add_polygon(ref: Node = null) -> Polygon:
-	var polygon := Polygon.new()
-	if ref:
-		polygon.ref_node = ref
-	polygons.append(polygon)
-	add_child.call_deferred(polygon.collision)
-	return polygon
-
-
-func _remove_polygon(ref: Node = null) -> void:
-	if not polygons:
-		return
-
-	var polygon: Polygon
-	if ref:
-		for i in polygons.size():
-			polygon = polygons[i]
-			if polygon.ref_node == ref:
-				polygons.pop_at(i)
-				break
-		return
-
-	else:
-		polygon = polygons.pop_back()
-	polygon.queue_free()
-
-
 func _copy_existing_polygon_to_collisions() -> void:
-	if not polygons:
-		return
-
-	if polygons.size() == 1:
-		var polygon: Polygon = polygons.front()
-		polygon.points = $Display.polygon
-		polygon.collision.polygon = $Display.polygon
+	_update_collisions()
+	if not polygons.size():
+		var collision: CollisionPolygon2D = collision_host.get_child(0)
+		collision.polygon = polygon
 		return
 
 	for i in range(polygons.size()):
-		var polygon: Polygon = polygons[i]
 		var points: PackedVector2Array = []
-		var count: int = $Display.polygons[i].size()
+		var count: int = polygons[i].size()
 		points.resize(count)
 		for j in range(count):
-			var index: int = $Display.polygons[i][j]
-			points[j] = $Display.polygon[index]
-		polygon.points = points
-		polygon.collision.polygon = points
+			var index: int = polygons[i][j]
+			points[j] = polygon[index]
+		var collision: CollisionPolygon2D = collision_host.get_child(i)
+		collision.polygon = points
 
 
-func _update_polygons(new_count: int) -> void:
-	var cur_count := polygons.size()
-	var diff := new_count - cur_count
+func _update_collisions() -> void:
+	var target_count := polygons.size()
+	if not target_count:
+		target_count = 1
+	var cur_count := collision_host.get_child_count()
+	var diff := target_count - cur_count
 	if diff >= 0:
 		for i in range(diff):
-			_add_polygon()
+			_add_collision()
 	elif diff <= 0:
 		for i in range(-diff):
-			_remove_polygon()
+			_remove_collision()
+
+
+func _add_collision() -> void:
+	var collision := CollisionPolygon2D.new()
+	collision_host.add_child(collision)
+	collision.owner = get_tree().edited_scene_root
+
+
+func _remove_collision() -> void:
+	collision_host.remove_child(collision_host.get_child(-1))
+
+
+func _on_draw():
+	if not Engine.is_editor_hint():
+		return
+
+	if _is_manual_editing:
+		_copy_existing_polygon_to_collisions()
+	_is_manual_editing = true
