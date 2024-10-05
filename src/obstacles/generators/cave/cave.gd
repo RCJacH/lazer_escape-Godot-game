@@ -80,6 +80,11 @@ func _refresh() -> void:
 		all_points.append_array(points)
 		if polygons:
 			_update_polygon(i, start_index, points.size())
+
+	var half := floori(all_points.size() * 0.5)
+	if not openings.size():
+		all_points[0] = all_points[half - 1]
+		all_points[-1] = all_points[half]
 	polygon = all_points
 
 
