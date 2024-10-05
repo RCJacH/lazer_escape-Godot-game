@@ -106,11 +106,27 @@ func _resize_polygon(target_size: int) -> void:
 
 
 func _update_polygon(polygon_index: int, start_index: int, count: int) -> void:
+	if not polygons:
+		return
+
 	var p: Array[int] = polygons[polygon_index]
 	p.resize(count)
 	for i in range(count):
 		var n := i + start_index
 		p[i] = n
+
+
+func _build_polygon_shape(
+	inner_points: Array[Vector2],
+	outer_points: Array[Vector2],
+) -> PackedVector2Array:
+	var points: PackedVector2Array = []
+	points.append_array(inner_points)
+	outer_points.reverse()
+	points.append_array(outer_points)
+	inner_points.clear()
+	outer_points.clear()
+	return points
 
 
 func _randf() -> float:

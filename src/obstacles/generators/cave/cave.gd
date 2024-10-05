@@ -106,16 +106,3 @@ func _add_points(deg: float, inner_points: Array[Vector2], outer_points: Array[V
 	var outer := direction * (radius + thickness + thickness * _randf())
 	inner_points.append(inner)
 	outer_points.append(outer)
-
-
-func _build_polygon_shape(
-	inner_points: PackedVector2Array,
-	outer_points: PackedVector2Array,
-) -> PackedVector2Array:
-	var points: PackedVector2Array = []
-	points.append_array(inner_points)
-	outer_points.reverse()
-	points.append_array(outer_points)
-	inner_points.clear()
-	outer_points.clear()
-	return points

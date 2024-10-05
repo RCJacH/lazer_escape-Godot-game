@@ -7,5 +7,6 @@
 script = ExtResource("2_g0tsb")
 density = 4
 
-[connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
-[connection signal="child_exiting_tree" from="." to="." method="_on_child_exiting_tree"]
+[node name="@CollisionPolygon2D@151021" type="CollisionPolygon2D" parent="CollisionHost" index="0"]
+
+[connection signal="child_order_changed" from="." to="." method="_on_child_order_changed"]
