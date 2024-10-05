@@ -17,25 +17,17 @@ class_name ObstacleGeneartorBoundary
 
 
 func _in_game_post_ready_actions() -> void:
-	_polygon_count = 1
 	_refresh_deferred()
 
 
-func refresh() -> void:
-	if not _pending_refresh:
-		return
-
-	_polygon_count = 1
+func _refresh() -> void:
 	var rect := _get_rect()
-
 	var points: PackedVector2Array = _get_corners(rect.grow(-shrink_inner))
 	var outer_corner := _get_corners(rect.grow(grow_outer))
 	outer_corner.reverse()
 	points.append_array(outer_corner)
 	points.append(points[0])
-	polygons[0].points = points
-	_update_data()
-	_pending_refresh = false
+	polygon = points
 
 
 func _get_rect() -> Rect2:
