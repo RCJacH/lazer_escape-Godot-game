@@ -8,7 +8,8 @@ static var length: float
 var position: Vector2 # point in the world space for source
 var collision_point: Vector2 # point in world space for collision
 var normal: Vector2 # normal in world space for collision
-var collider: Obstacle # Object collided or null (if unassociated)
+var collider: ObstacleCollisionObject # Object collided or null (if unassociated)
+var obstacle: Obstacle # Object collided or null (if unassociated)
 var collider_id: int # Object it collided against
 var rid: RID # RID it collided against
 var shape: int # shape index of collider
@@ -38,10 +39,14 @@ func _init(from: Vector2, result: Dictionary) -> void:
 	if not result:
 		return
 
+	collider = result.collider
+	if collider is not ObstacleCollisionObject:
+		return
+
 	position = from
 	collision_point = result.position
 	normal = result.normal
-	collider = result.collider
+	obstacle = collider.get_parent()
 	collider_id = result.collider_id
 	rid = result.rid
 	shape = result.shape
