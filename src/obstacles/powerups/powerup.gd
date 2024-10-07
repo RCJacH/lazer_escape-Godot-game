@@ -21,7 +21,7 @@ func on_lazer_hit(
 	lazer: Lazer,
 	_bounce_remaining: int,
 	collision_result: Collision,
-	previous_positions: Array[Vector2],
+	previous_positions: PackedVector2Array,
 ) -> PackedVector2Array:
 	previous_positions.append(collision_result.collision_point)
 	hit_by_lazer.emit()

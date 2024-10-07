@@ -18,7 +18,7 @@ func on_lazer_hit(
 	lazer: Lazer,
 	bounce_remaining: int,
 	collision_result: Collision,
-	previous_positions: Array[Vector2],
+	previous_positions: PackedVector2Array,
 ) -> PackedVector2Array:
 	previous_positions.append(collision_result.collision_point)
 	hit_by_lazer.emit()
@@ -36,10 +36,9 @@ func on_lazer_hit(
 		print("stuck")
 		new_result = new_result.back_trace()
 
-	return new_result.obstacle.on_lazer_hit(
+	return new_result.on_lazer_hit(
 		lazer,
 		bounce_remaining - 1,
-		new_result,
 		previous_positions,
 	)
 

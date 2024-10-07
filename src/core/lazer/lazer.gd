@@ -40,13 +40,11 @@ func update() -> void:
 		Vector2.from_angle(angle),
 	)
 
-	if collision_result.collider:
-		previous_positions = collision_result.obstacle.on_lazer_hit(
-			self,
-			bounces,
-			collision_result,
-			previous_positions
-		)
+	previous_positions = collision_result.on_lazer_hit(
+		self,
+		bounces,
+		previous_positions
+	)
 
 	for point in previous_positions:
 		_draw_points.append(point - global_position)

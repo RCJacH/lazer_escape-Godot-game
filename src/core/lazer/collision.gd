@@ -61,3 +61,13 @@ func back_trace() -> Collision:
 		position,
 		position.direction_to(collision_point) * (position.distance_to(collision_point) - 0.1)
 	)
+
+
+func on_lazer_hit(
+	lazer: Lazer,
+	bounces: int,
+	previous_positions: PackedVector2Array,
+) -> PackedVector2Array:
+	if not collider:
+		return previous_positions
+	return obstacle.on_lazer_hit(lazer, bounces, self, previous_positions)
