@@ -76,7 +76,7 @@ func _on_timer_timeout() -> void:
 	if action:
 		action.do(connected_lazer)
 	visible = false
-	polygons.front().collision.disabled = true
+	collision_host.get_child(0).disabled = true
 	destroy.emit()
 	connected_lazer.update()
 	connected_lazer = null
