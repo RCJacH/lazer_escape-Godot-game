@@ -73,7 +73,7 @@ func refresh() -> void:
 		return
 
 	_refresh()
-	_copy_existing_polygon_to_collisions()
+	_copy_existing_polygon_to_collisions.call_deferred()
 	_pending_refresh = false
 
 
