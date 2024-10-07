@@ -36,7 +36,7 @@ func on_lazer_hit(
 		print("stuck")
 		new_result = new_result.back_trace()
 
-	return new_result.collider.on_lazer_hit(
+	return new_result.obstacle.on_lazer_hit(
 		lazer,
 		bounce_remaining - 1,
 		new_result,
