@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://bd3ishbk4yw7d"]
+
+[ext_resource type="PackedScene" uid="uid://brjygsbomddjk" path="res://src/core/level/level.tscn" id="1_ojukr"]
+[ext_resource type="PackedScene" uid="uid://cgsx78wdmw5j5" path="res://src/obstacles/generators/cave/cave.tscn" id="2_txq73"]
+[ext_resource type="Script" path="res://src/obstacles/generators/cave/opening.gd" id="3_421ai"]
+
+[sub_resource type="Resource" id="Resource_c04gv"]
+script = ExtResource("3_421ai")
+position = 0.202
+width = 0.0301
+
+[node name="Level" instance=ExtResource("1_ojukr")]
+
+[node name="Cave" parent="." index="0" instance=ExtResource("2_txq73")]
+position = Vector2(578, 322)
+polygon = PackedVector2Array(-48.5745, 118.425, -118.087, 49.3918, -118.425, -48.5745, -49.3919, -118.087, 48.5745, -118.425, 118.087, -49.3918, 118.425, 48.5745, 49.3919, 118.087, 13, 236, 98.7837, 236.173, 236.85, 97.149, 236.306, -60.34, 236.173, -98.7837, 97.149, -236.85, -98.7837, -236.173, -236.85, -97.1491, -236.173, 98.7837, -97.1491, 236.85, -11, 237)
+thickness = 128.0
+openings = Array[ExtResource("3_421ai")]([SubResource("Resource_c04gv")])
+density = 8
+metadata/_edit_lock_ = true
+
+[node name="LevelDesignHelper" parent="." index="3"]
+position = Vector2(586, 754)
