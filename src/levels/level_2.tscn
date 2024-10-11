@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3 uid="uid://bjosa68ooygag"]
+
+[ext_resource type="PackedScene" uid="uid://brjygsbomddjk" path="res://src/core/level/level.tscn" id="1_b2dit"]
+[ext_resource type="PackedScene" uid="uid://cgsx78wdmw5j5" path="res://src/obstacles/generators/cave/cave.tscn" id="2_ean15"]
+[ext_resource type="Script" path="res://src/obstacles/generators/cave/opening.gd" id="3_q64xu"]
+[ext_resource type="PackedScene" uid="uid://s7qiaci5q74j" path="res://src/obstacles/generators/barrier/barrier.tscn" id="4_daxjq"]
+
+[sub_resource type="Resource" id="Resource_c04gv"]
+script = ExtResource("3_q64xu")
+position = 0.202
+width = 0.0301
+
+[node name="Level" instance=ExtResource("1_b2dit")]
+
+[node name="Cave" parent="." index="0" instance=ExtResource("2_ean15")]
+position = Vector2(578, 322)
+polygon = PackedVector2Array(-48.5745, 118.425, -118.087, 49.3918, -118.425, -48.5745, -49.3919, -118.087, 48.5745, -118.425, 118.087, -49.3918, 118.425, 48.5745, 49.3919, 118.087, 86.4357, 206.652, 207.244, 85.0054, 206.652, -86.4357, 85.0054, -207.244, -86.4358, -206.652, -207.244, -85.0054, -206.652, 86.4357, -85.0054, 207.244)
+thickness = 96.0
+openings = Array[ExtResource("3_q64xu")]([SubResource("Resource_c04gv")])
+density = 8
+metadata/_edit_lock_ = true
+
+[node name="Barrier" parent="." index="1" instance=ExtResource("4_daxjq")]
+polygon = PackedVector2Array(379.821, 587.339, 431.551, 580.774, 483.281, 574.209, 535.011, 567.644, 587.654, 560.107, 646.872, 564.676, 705.117, 568.333, 763.362, 571.99, 821.607, 575.646, 820.354, 595.607, 762.109, 591.95, 703.864, 588.294, 645.619, 584.637, 588.346, 581.893, 537.529, 587.485, 485.799, 594.05, 434.069, 600.615, 382.339, 607.179)
+density = 10
+bounceable = true
+
+[node name="Line2D" type="Line2D" parent="Barrier" index="1"]
+points = PackedVector2Array(391, 596, 588, 571, 811, 585)
+width = 20.0
+
+[node name="BoundaryBlock" parent="CanvasLayer/LevelBoundaries" index="0"]
+lazer_bounce_count = 1
+
+[node name="LevelDesignHelper" parent="." index="4"]
+position = Vector2(433, 715)
