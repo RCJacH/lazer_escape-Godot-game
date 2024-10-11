@@ -7,7 +7,7 @@ signal casting_finished()
 
 @export var bounces := 1
 
-var angle: float = 0.0
+var angle: float = -PI * 0.5
 
 var _draw_points: PackedVector2Array = [Vector2.ZERO]
 
